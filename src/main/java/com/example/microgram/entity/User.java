@@ -5,8 +5,9 @@ import lombok.Data;
 @Data
 public class User {
     private int id;
-    private String name;
-    private String user;
+    private String accountName;
+    private String email;
     private String password;
-    private String postQuantity;
+    private Integer postQuantity;
+    private Integer followerQuantity;
 }

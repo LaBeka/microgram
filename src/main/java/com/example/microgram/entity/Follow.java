@@ -3,12 +3,8 @@ package com.example.microgram.entity;
 import lombok.Data;
 
 @Data
-public class Follow implements Followable{
-    private User user;
+public class Follow {
+    private User userBeingFollowed;
+    private User userFollowing;
     private String followDate;
-
-    @Override
-    public void follow(User user) {
-
-    }
 }

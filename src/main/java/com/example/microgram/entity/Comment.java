@@ -2,9 +2,16 @@ package com.example.microgram.entity;
 
 import lombok.Data;
 
+import java.time.LocalDate;
+
 @Data
-public class Comment {
+public class Comment implements Likable {
     private int id;
     private String commentText;
-    private String commentDate;
+    private LocalDate commentDate;
+
+    @Override
+    public LikableType getType() {
+        return LikableType.COMMENT;
+    }
 }
