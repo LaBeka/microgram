@@ -6,14 +6,14 @@ import java.time.LocalDate;
 
 @Data
 public class Like {
-    private LocalDate date;
-    private User user;
+    private LocalDate like_date;
+    private User user_id;
     private LikableType type;
     private int entityId;
 
     public Like(LocalDate date, User user, Likable entity) {
-        this.date = date;
-        this.user = user;
+        this.like_date = date;
+        this.user_id = user;
         this.type = entity.getType();
         this.entityId = entity.getId();
     }

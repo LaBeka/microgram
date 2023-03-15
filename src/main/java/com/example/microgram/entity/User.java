@@ -4,10 +4,11 @@ import lombok.Data;
 
 @Data
 public class User {
-    private int id;
+    private int user_id;
     private String accountName;
     private String email;
     private String password;
     private Integer postQuantity;
     private Integer followerQuantity;
+    private String user_name;
 }
