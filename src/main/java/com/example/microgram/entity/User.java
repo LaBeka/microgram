@@ -9,6 +9,6 @@ public class User {
     private String email;
     private String password;
     private Integer postQuantity;
-    private Integer followerQuantity;
+    private Integer followQuantity;
     private String user_name;
 }

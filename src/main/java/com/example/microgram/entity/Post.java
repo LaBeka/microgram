@@ -7,6 +7,7 @@ import java.time.LocalDate;
 @Data
 public class Post implements Likable {
     private int id;
+    private User user_id;
     private String photo;
     private String description;
     private LocalDate postDate;
