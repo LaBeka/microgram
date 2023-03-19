@@ -21,7 +21,6 @@ public class UserDao {
         String sql = "select * from users_microgram";
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(User.class));
     }
-//
 //    private void dropTableIfExists(){
 //        String sql = "DROP TABLE IF EXISTS user;";
 //        jdbcTemplate.execute(sql);
@@ -38,7 +37,7 @@ public class UserDao {
 //                "    );";
 //        jdbcTemplate.execute(sql);
 //    }
-    public void updateTable(User user){
+    public void updateTable(User user) throws SQLException {
         String sql = "insert into users (account_name, email, password, post_quantity, follow_quantity, user_name)\n" +
                 "values (?, ?, ?, ?, ?, ?);";
         jdbcTemplate.update(sql, user.getAccountName(),
