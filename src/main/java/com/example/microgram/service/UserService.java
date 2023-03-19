@@ -13,13 +13,5 @@ public class UserService {
     private UserDao userDao;
     private Connection conn;
 
-    public void updateUsers(String userstr){
-        User user =
-        try{
-            userDao.updateTable(user);
-        } catch (SQLException e){
-            System.out.println("updateUsers in userservice");
-            e.getMessage();
-        }
-    }
+
 }

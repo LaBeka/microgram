@@ -3,8 +3,7 @@ package com.example.microgram.entity;
 import lombok.*;
 
 @Data
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
 public class User {
     private int userId;
     private String accountName;

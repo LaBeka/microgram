@@ -1,18 +1,13 @@
 package com.example.microgram.service;
 
-import com.example.microgram.dto.UserDto;
-import com.example.microgram.entity.User;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.support.DataAccessUtils;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -21,7 +16,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AuthenticationService {
     private JdbcTemplate jdbcTemplate;
-
+    private Connection conn;
 
     public void authenticateUser(String accountName,
                              String password) throws SQLException, ClassNotFoundException {
@@ -29,19 +24,20 @@ public class AuthenticationService {
         String securedPassword = md5String(getCharacters(password).toString());
         Optional userExists = checkUser(accountName, securedPassword);
 
-        if(userExists != null) {
+        if (userExists != null) {
             String message = "Successful!";
         } else {
             String message = "Not successful";
+        }
     }
+    private Optional checkUser(String accountName, String pass) throws SQLException{
+            String sql = "select * from users \n" +
+                    "where account_name :accountName\n" +
+                    "and password :pass;";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet res = ps.executeQuery(sql);
 
-    private Optional checkUser(String accountName, String pass) {
-        String sql = "select * from users \n" +
-                "where account_name like :accountName\n" +
-                "and password = :pass;";
-        return Optional.ofNullable(DataAccessUtils.singleResult(
-                jdbcTemplate.execute(sql);
-        );
+            return Optional.ofNullable(res.next());
     }
 
 
@@ -70,5 +66,4 @@ public class AuthenticationService {
         }
         return newChar;
     }
-}
 }
