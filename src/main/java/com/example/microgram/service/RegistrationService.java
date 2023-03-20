@@ -35,7 +35,7 @@ public class RegistrationService {
                 "follow_quantity, " +
                 "follower_quantity, " +
                 "user_name)\n" +
-                "values (?, ?, ?, ?, ?, ?);";
+                "values (?, ?, ?, ?, ?, ?, ?);";
         jdbcTemplate.update(conn -> {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, accountName);
@@ -43,7 +43,8 @@ public class RegistrationService {
             ps.setString(3, securedPassword);
             ps.setInt(4, 0);
             ps.setInt(5, 0);
-            ps.setString(6, userName);
+            ps.setInt(6, 0);
+            ps.setString(7, userName);
             return ps;
         });
         return true;

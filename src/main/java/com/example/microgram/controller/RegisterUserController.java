@@ -19,7 +19,7 @@ import java.util.Optional;
 public class RegisterUserController {
     private RegistrationService service;
 
-    @PostMapping(value = "/")
+    @PostMapping(value = "/register")
     public ResponseEntity register(Model model, RegisterUserDto data) {
         ArrayList<String> validateErrors = data.validateRegUser();
         if(validateErrors.size() > 0){

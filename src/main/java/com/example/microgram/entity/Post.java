@@ -1,22 +1,19 @@
 package com.example.microgram.entity;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
-import java.time.LocalDate;
+import java.util.Date;
 
 @Data
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@RequiredArgsConstructor
 public class Post implements Likable {
     private int entity_id;
-    private User user_id;
+    private int user_id;
     private String photo;
     private String description;
-    private LocalDate post_date;
-
+    private Date post_date;
+//user_id, photo, description, post_date
     @Override
     public LikableType getType() {
         return LikableType.POST;

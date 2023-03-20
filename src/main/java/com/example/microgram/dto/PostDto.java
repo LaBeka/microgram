@@ -1,15 +1,14 @@
 package com.example.microgram.dto;
 
-import com.example.microgram.entity.User;
 import lombok.Data;
 
-import java.time.LocalDate;
+import java.util.Date;
 
 @Data
 public class PostDto {
     private int id;
-    private User user_id;
+    private int user_id;
     private String photo;
     private String description;
-    private LocalDate postDate;
+    private Date postDate;
 }
