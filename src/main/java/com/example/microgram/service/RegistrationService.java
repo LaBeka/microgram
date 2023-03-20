@@ -1,10 +1,7 @@
 package com.example.microgram.service;
 
-import com.example.microgram.dto.RegisterUserDto;
-import com.example.microgram.dto.UserDto;
 import com.example.microgram.entity.User;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -36,6 +33,7 @@ public class RegistrationService {
                 "password, " +
                 "post_quantity, " +
                 "follow_quantity, " +
+                "follower_quantity, " +
                 "user_name)\n" +
                 "values (?, ?, ?, ?, ?, ?);";
         jdbcTemplate.update(conn -> {

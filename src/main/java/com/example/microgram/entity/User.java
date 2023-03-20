@@ -3,7 +3,7 @@ package com.example.microgram.entity;
 import lombok.*;
 
 @Data
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class User {
     private int userId;
     private String accountName;
@@ -11,5 +11,6 @@ public class User {
     private String password;
     private Integer postQuantity;
     private Integer followQuantity;
+    private Integer followerQuantity;
     private String userName;
 }
