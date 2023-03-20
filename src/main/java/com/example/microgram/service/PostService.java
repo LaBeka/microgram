@@ -1,6 +1,7 @@
 package com.example.microgram.service;
 
 import com.example.microgram.dao.PostDao;
+import com.example.microgram.dto.PostDto;
 import com.example.microgram.entity.Post;
 import com.example.microgram.entity.User;
 import com.example.microgram.mappers.PostMapper;
@@ -20,13 +21,18 @@ import java.util.Optional;
 public class PostService {
     private JdbcTemplate jdbcTemplate;
 
-    public void updateTable(Post post){
-        String sql = "insert into posts(user_id, photo, description, post_date)\n" +
-                "values (?, ?, ?, ?);";
-        jdbcTemplate.update(sql, post.getUser_id(),
-                post.getPhoto(),
-                post.getDescription(),
-                post.getPost_date());
+    public String updateTable(PostDto post) {
+            String sql = "insert into posts(user_id, photo, description, post_date)\n" +
+                    "values (?, ?, ?, ?);";
+            jdbcTemplate.update(sql,
+                    post.getUser_id(),
+                    "Some photo",
+                    post.getDescription(),
+                    post.getPostDate());
+
+            String updateUsersql = "insert into "
+            return "Added new post";
+
     }
 
     public Optional getPostById(int entityId){

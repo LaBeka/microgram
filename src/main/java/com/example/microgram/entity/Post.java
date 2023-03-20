@@ -12,8 +12,8 @@ public class Post implements Likable {
     private int user_id;
     private String photo;
     private String description;
-    private Date post_date;
-//user_id, photo, description, post_date
+    private Date postDate;
+
     @Override
     public LikableType getType() {
         return LikableType.POST;
