@@ -10,6 +10,7 @@ public class PostMapper implements RowMapper<Post> {
     @Override
     public Post mapRow(ResultSet rs, int rowNum) throws SQLException {
         Post post = new Post();
+        post.setPost_id(rs.getInt("post_id"));
         post.setEntity_id(rs.getInt("entity_id"));
         post.setUser_id(rs.getInt("user_id"));
         post.setPhoto(rs.getString("photo"));

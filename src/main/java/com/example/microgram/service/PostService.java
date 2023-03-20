@@ -19,20 +19,24 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class PostService {
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     public String updateTable(PostDto post) {
-            String sql = "insert into posts(user_id, photo, description, post_date)\n" +
-                    "values (?, ?, ?, ?);";
+            String sql = "insert into posts(entity_id, user_id, photo, description, post_date)\n" +
+                    "values (?, ?, ?, ?, ?);";
             jdbcTemplate.update(sql,
+                    0,
                     post.getUser_id(),
                     "Some photo",
                     post.getDescription(),
                     post.getPostDate());
 
-            String updateUsersql = "insert into "
-            return "Added new post";
+            String updateUserSql = "update users\n" +
+                    "set post_quantity = post_quantity + 1\n" +
+                    "where user_id = ?";
+            jdbcTemplate.update(updateUserSql, post.getUser_id());
 
+            return "Added new post";
     }
 
     public Optional getPostById(int entityId){
@@ -43,20 +47,25 @@ public class PostService {
         ));
     }
 
-    public List<Post> getOthersPosts(String email){
+    public List<Post> getOthersPosts(int userId){
         String sql = "select * from posts\n" +
-                "    join users on posts.user_id = users.user_id\n" +
-                "    where users.email = ?;";
-        return jdbcTemplate.query(sql, new PostMapper(), email);
+                "    where posts.user_id not in (?);";
+        return jdbcTemplate.query(sql, new PostMapper(), userId);
     }
 
-    public Optional getOthersPostsByFollowings(User user){
+    public List<Post> getOthersPostsByFollowings(int userId){
         String sql = "select * from posts\n" +
-                "    join users on users.user_id = posts.user_id\n" +
-                "    join follows on users.user_id = follows.user_following\n" +
-                "    where users.email = ?;";
+                "    join follows on posts.user_id = follows.user_following" +
+                "    where follows.user_following not in (?);";
+        return jdbcTemplate.query(sql, new PostMapper(), userId);
+    }
+    public Optional<Post> checkLikeOnPost(int postId){
+        String sql = "select * from posts\n" +
+                "    join likes on posts.entity_id = likes.entityid" +
+                "    where posts.post_id = ?" +
+                "    and posts.entity_id in (likes.entityid);";
         return Optional.ofNullable(DataAccessUtils.singleResult(
-                jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Post.class), user.getUserId())
+                jdbcTemplate.query(sql, new PostMapper(), postId)
         ));
     }
 }

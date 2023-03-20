@@ -11,6 +11,7 @@ import java.time.LocalDate;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Comment implements Likable {
+    private int comment_id;
     private int entity_id;
     private User user_id;
     private String comment_text;
