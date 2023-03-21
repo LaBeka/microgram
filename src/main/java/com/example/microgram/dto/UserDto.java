@@ -1,12 +1,14 @@
 package com.example.microgram.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.ArrayList;
 
 @Data
 @AllArgsConstructor
+@Builder
 public class UserDto {
     private int userId;
     private String accountName;
@@ -31,12 +33,6 @@ public class UserDto {
         }
         if(userName.isEmpty() || userName.length() < 3 || userName == null){
             errors.add("User name is not valid");
-        }
-        if(postQuantity < 0){
-            errors.add("Post quantity can not be less then ZERO");
-        }
-        if(followQuantity < 0){
-            errors.add("Followers quantity can not be less then ZERO");
         }
         return errors;
     }

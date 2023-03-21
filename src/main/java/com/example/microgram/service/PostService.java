@@ -1,18 +1,15 @@
 package com.example.microgram.service;
 
-import com.example.microgram.dao.PostDao;
 import com.example.microgram.dto.PostDto;
 import com.example.microgram.entity.Post;
-import com.example.microgram.entity.User;
 import com.example.microgram.mappers.PostMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.MultiValueMap;
 
-import java.sql.*;
 import java.util.List;
 import java.util.Optional;
 
@@ -67,5 +64,15 @@ public class PostService {
         return Optional.ofNullable(DataAccessUtils.singleResult(
                 jdbcTemplate.query(sql, new PostMapper(), postId)
         ));
+    }
+
+    public String putLikeOnThePost(MultiValueMap<String, String> formData) {
+        int postId = Integer.parseInt(String.valueOf(formData.get("postId")));
+
+        String sql = "select * from posts\n" +
+                "    join likes on posts.entity_id = likes.entityid" +
+                "    where posts.post_id = ?" +
+                "    and posts.entity_id in (likes.entityid);";
+        return "";
     }
 }

@@ -1,10 +1,12 @@
 package com.example.microgram.dto;
 
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.ArrayList;
 
 @Data
+@Builder
 public class RegisterUserDto {
     private String accountName;
     private String email;
@@ -27,4 +29,5 @@ public class RegisterUserDto {
         }
         return errors;
     }
+
 }

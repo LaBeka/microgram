@@ -1,5 +1,7 @@
 package com.example.microgram.service;
 
+import com.example.microgram.dao.UserDao;
+import com.example.microgram.dto.UserDto;
 import com.example.microgram.entity.User;
 import com.example.microgram.mappers.UserMapper;
 import lombok.RequiredArgsConstructor;
@@ -10,51 +12,53 @@ import org.springframework.stereotype.Service;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
     private final JdbcTemplate jdbcTemplate;
+    private UserDao userDao;
 
-    public void updateTable(User user) throws SQLException {
+    public boolean addNewUser(User user) throws SQLException {
         String sql = "insert into users (account_name, email, password, post_quantity, follow_quantity, follower_quantity, user_name)\n" +
                 "values (?, ?, ?, ?, ?, ?, ?);";
-        jdbcTemplate.update(sql,
-                user.getAccountName(),
-                user.getEmail(),
-                user.getPassword(),
-                user.getPostQuantity(),
-                user.getFollowQuantity(),
-                user.getFollowerQuantity(),
-                user.getUserName());
+        return userDao.updateTable(user, sql);
     }
 
-    public Optional getUserById(int entityId){
+    public UserDto getUserById(int entityId){
         String sql = "select * from users where user_id = ?;";
-        return Optional.ofNullable(DataAccessUtils.singleResult(
-                jdbcTemplate.query(sql, new UserMapper(), entityId)
-        ));
-    }
+        User userFound = userDao.findUserById(entityId, sql);
+        return buildUser(userFound);
 
-    public Optional getUserByAccountName(String accountName){
+    }
+    public UserDto getUserByAccountName(String accountName){
         String sql = "select * from users where account_name = ?;";
-        return Optional.ofNullable(DataAccessUtils.singleResult(
-                jdbcTemplate.query(sql, new UserMapper(), accountName)
-        ));
+        User userFound = userDao.findUserByAcName(accountName, sql);
+        return buildUser(userFound);
     }
 
-    public Optional getUserByEmail(String email){
+    private UserDto buildUser(User userFound) {
+        return UserDto.builder()
+                .accountName(userFound.getAccountName())
+                .email(userFound.getEmail())
+                .postQuantity(userFound.getPostQuantity())
+                .followQuantity(userFound.getFollowQuantity())
+                .followerQuantity(userFound.getFollowerQuantity())
+                .userName(userFound.getUserName())
+                .build();
+    }
+
+    public UserDto getUserByEmail(String email){
         String sql = "select * from users where email = ?;";
-        return Optional.ofNullable(DataAccessUtils.singleResult(
-                jdbcTemplate.query(sql, new UserMapper(), email)
-        ));
+        User userFound = userDao.findUserByEmail(email, sql);
+        return buildUser(userFound);
     }
 
-    public Optional getUserByName(String userName){
+    public UserDto getUserByName(String userName){
         String sql = "select * from users where user_name = ?;";
-        return Optional.ofNullable(DataAccessUtils.singleResult(
-                jdbcTemplate.query(sql, new UserMapper(), userName)
-        ));
+        User userFound = userDao.findUserByName(userName, sql);
+        return buildUser(userFound);
     }
 
     public Optional deleteUserByEmail(String email){
@@ -65,7 +69,7 @@ public class UserService {
     }
     public String deleteAll() {
 //        try{
-            String sql = "delete from users;";
+            String sql = "delete * from users;";
 //            PreparedStatement ps = jdbcTemplate
 //            jdbcTemplate.execute(sql, new PreparedStatement());
 
@@ -75,8 +79,11 @@ public class UserService {
         }*/
     }
 
-    public List<User> getUsers(){
+    public List<UserDto> getUsers(){
         String sql = "select * from users";
-        return jdbcTemplate.query(sql, new UserMapper());
+        List<User> query = jdbcTemplate.query(sql, new UserMapper());
+        return query.stream()
+            .map(u -> buildUser(u))
+            .collect(Collectors.toList());
     }
 }

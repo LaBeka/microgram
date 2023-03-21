@@ -8,7 +8,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -20,21 +19,21 @@ public class RegisterUserController {
     private RegistrationService service;
 
     @PostMapping(value = "/register")
-    public ResponseEntity register(Model model, RegisterUserDto data) {
+    public ResponseEntity register(RegisterUserDto data) {
         ArrayList<String> validateErrors = data.validateRegUser();
-        if(validateErrors.size() > 0){
-            return new ResponseEntity<ErrorDto>(new ErrorDto(validateErrors), HttpStatus.BAD_REQUEST);
-        }
-        Optional<User> userFound = service.findUserByEmail(data.getEmail());
-        if(userFound.isPresent()){
+
+        boolean userFound = service.findUserByEmail(data.getEmail());
+        if(userFound == false){
             validateErrors.add("User by this email already exists.");
             return new ResponseEntity<ErrorDto>(new ErrorDto(validateErrors), HttpStatus.BAD_REQUEST);
         }
-        boolean recordUserDB = service.registerUser(
-                data.getAccountName(),
-                data.getEmail(),
-                data.getPassword(),
-                data.getUserName());
+
+        if(validateErrors.size() > 0){
+            return new ResponseEntity<ErrorDto>(new ErrorDto(validateErrors), HttpStatus.BAD_REQUEST);
+        }
+
+
+        boolean recordUserDB = service.registerUser(data);
 
         if(!recordUserDB){
             validateErrors.add("User is not recorded in database.");
