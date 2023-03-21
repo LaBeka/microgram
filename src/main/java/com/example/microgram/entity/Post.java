@@ -8,17 +8,14 @@ import java.util.Date;
 
 @Data
 @RequiredArgsConstructor
-public class Post implements Likable {
-    private int post_id;
-    private int entity_id;
-    private int user_id;
+public class Post{
+    private int postId;
+    private int likeId;
+    private int userId;
     private String photo;
     private String description;
+
     @DateTimeFormat(fallbackPatterns = "dd/MM/yyyy")
     private Date postDate;
 
-    @Override
-    public LikableType getType() {
-        return LikableType.POST;
-    }
 }

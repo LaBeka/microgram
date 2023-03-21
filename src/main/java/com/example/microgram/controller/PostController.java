@@ -22,21 +22,28 @@ public class PostController {
 
     @PostMapping(value = "/post")
     public ResponseEntity createNewPost(PostDto data) {
-        UserDto findUser = userService.getUserById(data.getUser_id());
+        UserDto findUser = userService.getUserById(data.getUserId());
 
         if(findUser == null){
-            return new ResponseEntity(postService.updateTable(data), HttpStatus.OK);
+            return new ResponseEntity(postService.addNewPost(data), HttpStatus.OK);
         } else {
             return new ResponseEntity("Not found user!", HttpStatus.BAD_REQUEST);
         }
     }
+
     @GetMapping(value = "/post/{userId}")
-    public ResponseEntity<List<Post>> getOthersPosts(@PathVariable int userId){
-        return new ResponseEntity<List<Post>>(postService.getOthersPosts(userId), HttpStatus.OK);
+    public ResponseEntity<List<PostDto>> getOthersPosts(@PathVariable int userId){
+        return new ResponseEntity<List<PostDto>>(
+                postService.getOthersPosts(userId),
+                HttpStatus.OK
+        );
     }
     @GetMapping(value = "/followingsPost/{userId}")
-    public ResponseEntity<List<Post>> getPostsBySubscription(@PathVariable int userId){
-        return new ResponseEntity<List<Post>>(postService.getOthersPostsByFollowings(userId), HttpStatus.OK);
+    public ResponseEntity<List<PostDto>> getPostsBySubscription(@PathVariable int userId){
+        return new ResponseEntity<List<PostDto>>(
+                postService.getOthersPostsByFollowings(userId),
+                HttpStatus.OK
+        );
     }
     @GetMapping(value = "/post/{postId}")
     public ResponseEntity checkLikeOnPost(@PathVariable int postId){

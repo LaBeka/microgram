@@ -4,22 +4,17 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
-import java.time.LocalDate;
+import java.util.Date;
 
 @Data
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Like {
-    private LocalDate like_date;
-    private User user_id;
-    private LikableType type_like;
-    private int entity_id;
+    private int likeId;
+    private int userId;
 
-    public Like(LocalDate date, User user, Likable entity) {
-        this.like_date = date;
-        this.user_id = user;
-        this.type_like = entity.getType();
-        this.entity_id = entity.getEntity_id();
-    }
+    @DateTimeFormat(fallbackPatterns = "dd/MM/yyyy")
+    private Date likeDate;
 }
