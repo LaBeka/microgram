@@ -1,20 +1,16 @@
 package com.example.microgram.entity;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@RequiredArgsConstructor
 public class Like {
-    private int likeId;
-    private int userId;
-
+    private Long likeId;
+    private Long userId;
     @DateTimeFormat(fallbackPatterns = "dd/MM/yyyy")
-    private Date likeDate;
+    private LocalDate likeDate;
+    private Long postId;
 }

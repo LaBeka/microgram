@@ -1,50 +1,67 @@
 package com.example.microgram.dao;
 
+import com.example.microgram.dto.CommentDto;
 import com.example.microgram.entity.Comment;
-import lombok.RequiredArgsConstructor;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.Optional;
 
-@Component
-@RequiredArgsConstructor
-public class CommentDao {
-    private final JdbcTemplate jdbcTemplate;
-
-//    public List<Comment> getComments(){
-//        String sql = "select * from comment";
-//        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Comment.class));
-//    }
-//
-//    private void dropTableIfExists(){
-//        String sql = "DROP TABLE IF EXISTS comment;";
-//        jdbcTemplate.execute(sql);
-//    }
-//    private void createTable(){
-//        String sql = "CREATE TABLE comment (\n" +
-//                "    entity_id serial primary key\n" +
-//                "    user_id varchar(40) not null,\n" +
-//                "    comment_text text not null,\n" +
-//                "    like_date date,\n" +
-//                ");";
-//        jdbcTemplate.execute(sql);
-//    }
-    public void updateTable(Comment comment){
-        String sql = "insert into comments_mic(user_id, comment_text, comment_date)\n" +
-                "values (?, ?, ?);";
-        jdbcTemplate.update(sql, comment.getUser_id(),
-                comment.getComment_text(),
-                comment.getComment_date());
+@Service
+public class CommentDao extends BaseDao{
+    public CommentDao(JdbcTemplate jdbcTemplate) {
+        super(jdbcTemplate);
     }
-    public Optional getCommentById(int entityId){
-        String sql = "select * from comments_mic where entity_id = ?;";
+
+    public String addNewComment(CommentDto comment){
+        String sql = "insert into comments_mic(" +
+                "comment_text, " +
+                "comment_date, " +
+                "user_id," +
+                "post_id)\n" +
+                "values (?, ?, ?, ?);";
+        int update = jdbcTemplate.update(sql,
+                comment.getCommentText(),
+                convertToDateViaSqlDate(LocalDate.now()),
+                comment.getUserId(),
+                comment.getPostId());
+        if(update == 1){
+            return "Added new comment: " + comment.toString();
+        } else{
+            return "Unsuccess";
+        }
+    }
+    public Optional<Comment> ifCommentExists(CommentDto data){
+        String sql = "select * from comments_mic " +
+                "where comment_text in (?) " +
+                "and user_id = ? " +
+                "and post_id = ?;";
 
         return Optional.ofNullable(DataAccessUtils.singleResult(
-                jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Comment.class), entityId)
+                jdbcTemplate.query(
+                        sql,
+                        new BeanPropertyRowMapper<>(Comment.class),
+                        data.getCommentText(),
+                        data.getUserId(),
+                        data.getPostId())
         ));
+    }
+    private Date convertToDateViaSqlDate(LocalDate dateToConvert) {
+        return java.sql.Date.valueOf(dateToConvert);
+    }
+
+    public String unComment(Comment comment) {
+        String sql = "delete from comments_mic \n" +
+                "where comment_id = ?;";
+        int update = jdbcTemplate.update(sql, comment.getCommentId());
+        if(update == 1){
+            return "Successful delete!";
+        } else {
+            return "Unsuccessful delete";
+        }
     }
 }

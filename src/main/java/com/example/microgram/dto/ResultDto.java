@@ -1,12 +1,13 @@
 package com.example.microgram.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
-import java.util.ArrayList;
 
 @Data
 @AllArgsConstructor
-public class ErrorDto {
-    private ArrayList<String> errorMessages;
+@Builder
+public class ResultDto {
+    public String message;
 }

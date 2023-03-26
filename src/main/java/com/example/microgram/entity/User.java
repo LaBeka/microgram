@@ -5,13 +5,11 @@ import lombok.*;
 @Data
 @AllArgsConstructor
 @RequiredArgsConstructor
+@Builder
 public class User {
-    private int userId;
+    private Long userId;
     private String accountName;
     private String email;
     private String password;
-    private Integer postQuantity;
-    private Integer followQuantity;
-    private Integer followerQuantity;
-    private String userName;
+    private String name;
 }

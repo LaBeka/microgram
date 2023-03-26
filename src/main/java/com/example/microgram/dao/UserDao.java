@@ -2,108 +2,72 @@ package com.example.microgram.dao;
 
 import com.example.microgram.entity.User;
 import com.example.microgram.mappers.UserMapper;
-import lombok.AllArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.List;
+import java.util.Optional;
 
-@Component
-@AllArgsConstructor
-public class UserDao {
-    private JdbcTemplate jdbcTemplate;
-    private Connection conn;
-
-    public boolean updateTable(User user, String sql) {
-        jdbcTemplate.update(sql,
-                user.getAccountName(),
-                user.getEmail(),
-                user.getPassword(),
-                user.getPostQuantity(),
-                user.getFollowQuantity(),
-                user.getFollowerQuantity(),
-                user.getUserName());
-        return true;
+@Service
+public class UserDao extends BaseDao{
+    public UserDao(JdbcTemplate jdbcTemplate) {
+        super(jdbcTemplate);
     }
 
-    public User findUserById(int entityId, String sql) {
+    public Optional<User> userExistsEmail(String email){
+        String sql = "select * from users where email = ?;";
+        return Optional.ofNullable(DataAccessUtils.singleResult(
+                jdbcTemplate.query(sql, new UserMapper(), email)
+        ));
+    }
+    public Optional<User> userExistsAccount(String accountName) {
+        String sql = "select * from users where account_name = ?;";
+        return Optional.ofNullable(DataAccessUtils.singleResult(
+                jdbcTemplate.query(sql, new UserMapper(), accountName)
+        ));
+    }
+    public Optional<User> userExistsName(String name) {
+        String sql = "select * from users where user_name = ?;";
+        return Optional.ofNullable(DataAccessUtils.singleResult(
+                jdbcTemplate.query(sql, new UserMapper(), name)
+        ));
+    }
+    public Optional<User> userExistsID(Long id) {
+        String sql = "select * from users where user_id = ?;";
+        return Optional.ofNullable(DataAccessUtils.singleResult(
+                jdbcTemplate.query(sql, new UserMapper(), id)
+        ));
+    }
+
+    public List<User> getListUsers() {
+        String sql = "select * from users;";
+        return jdbcTemplate.query(sql, new UserMapper());
+    }
+    public Long getUsersPostQuantity(User user) throws EmptyResultDataAccessException {
+        String sql = "select count(user_id) from posts where user_id = ? group by user_id;";
         try {
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, entityId);
-            if (ps.execute()) {
-                return executeStatement(ps);
-            } else {
-                throw new SQLException();
-            }
-        } catch (SQLException e) {
-            return null;
+            return jdbcTemplate.queryForObject(sql, Long.class, user.getUserId());
+        } catch (EmptyResultDataAccessException e){
+            return 0L;
         }
     }
 
-    public User findUserByAcName(String accountName, String sql) {
+    public Long getUsersFollowerQuantity(User user){
+        String sql = "select count(user_being_followed) from follows where user_being_followed = ? group by user_being_followed;";
         try {
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, accountName);
-            if (ps.execute()) {
-                return executeStatement(ps);
-            } else {
-                throw new SQLException();
-            }
-        } catch (SQLException e) {
-            return null;
+            return jdbcTemplate.queryForObject(sql, Long.class, user.getUserId());
+        } catch (EmptyResultDataAccessException e){
+            return 0L;
         }
     }
-
-    private User executeStatement(PreparedStatement ps) throws SQLException{
-        ResultSet resultSet = ps.getResultSet();
-        resultSet.next();
-        int user_id = resultSet.getInt("user_id");
-        String accountName = resultSet.getString("account_name");
-        String email = resultSet.getString("email");
-        String password = resultSet.getString("password");
-        Integer postQuantity = resultSet.getInt("post_quantity");
-        Integer followQuantity = resultSet.getInt("follow_quantity");
-        Integer followerQuantity = resultSet.getInt("follower_quantity");
-        String username = resultSet.getString("user_name");
-        return new User(user_id,
-                accountName,
-                email,
-                password,
-                postQuantity,
-                followQuantity,
-                followerQuantity,
-                username);
-    }
-
-    public User findUserByName(String userName, String sql) {
+    public Long getUsersFollowingQuantity(User user){
+        String sql = "select count(user_following) from follows where user_following = ? group by user_following;";
         try {
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, userName);
-            if (ps.execute()) {
-                return executeStatement(ps);
-            } else {
-                throw new SQLException();
-            }
-        } catch (SQLException e) {
-            return null;
-        }
-    }
-
-    public User findUserByEmail(String email, String sql) {
-        try {
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, email);
-            if (ps.execute()) {
-                return executeStatement(ps);
-            } else {
-                throw new SQLException();
-            }
-        } catch (SQLException e) {
-            return null;
+            return jdbcTemplate.queryForObject(sql, Long.class, user.getUserId());
+        } catch (EmptyResultDataAccessException e){
+            return 0L;
         }
     }
 }

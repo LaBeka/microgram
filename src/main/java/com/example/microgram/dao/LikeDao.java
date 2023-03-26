@@ -1,59 +1,72 @@
 package com.example.microgram.dao;
 
+import com.example.microgram.dto.LIkeDto;
 import com.example.microgram.entity.Like;
-import com.example.microgram.entity.Post;
-import lombok.RequiredArgsConstructor;
-import org.springframework.dao.support.DataAccessUtils;
+import com.example.microgram.mappers.LikeMapper;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.util.List;
 
-@Component
-@RequiredArgsConstructor
-public class LikeDao {
-    private final JdbcTemplate jdbcTemplate;
-
-//    public List<Like> getLikes(){
-//        String sql = "select * from likes";
-//        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Like.class));
-//    }
-//
-//    private void dropTableIfExists(){
-//        String sql = "DROP TABLE IF EXISTS like;";
-//        jdbcTemplate.execute(sql);
-//    }
-//    private void createTable(){
-//        String sql = "CREATE TABLE like (\n" +
-//                "    like_date date,\n" +
-//                "    user_id varchar(40) not null,\n" +
-//                "    type char not null,\n" +
-//                "    entity_id serial primary key\n" +
-//                ");";
-//        jdbcTemplate.execute(sql);
-//    }
-    public void updateTable(Like like){
-        String sql = "insert into likes(like_date, user_id, type_like)\n" +
-                "values (?, ?, ?);";
-        jdbcTemplate.update(sql, like.getLike_date(),
-                like.getUser_id(),
-                like.getType_like());
-    }
-    public Optional getLikeById(int entityId){
-        String sql = "select * from likes where entity_id = ?;";
-
-        return Optional.ofNullable(DataAccessUtils.singleResult(
-                jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Like.class), entityId)
-        ));
+@Service
+public class LikeDao extends BaseDao{
+    public LikeDao(JdbcTemplate jdbcTemplate) {
+        super(jdbcTemplate);
     }
 
-    public Optional checkIfLiked(Post post){
+    public String putLikeOnThePost(LIkeDto lIkeDto) {
+        String sqlLike = "insert into likes(user_id, like_date, post_id)\n" +
+                "values(?, ?, ?)";
+
+        int likeUpdate = jdbcTemplate.update(
+                sqlLike,
+                lIkeDto.getUserId(),
+                convertToDateViaSqlDate(LocalDate.now()),
+                lIkeDto.getPostId()
+        );
+        if(likeUpdate == 1){
+            return "Success!";
+        } else{
+            return "Unsuccess!";
+        }
+    }
+    public String unLikeOnThePost(Like lIke) {
+        String sqlLike = "delete from likes\n" +
+                "where like_id = ?;";
+
+        int likeUpdate = jdbcTemplate.update(sqlLike, lIke.getLikeId());
+        if(likeUpdate == 1){
+            return "Success! " + lIke.toString() + " has been deleted!";
+        } else{
+            return "Unsuccess!";
+        }
+    }
+    public List<Like> getLikesPost(Long postId){
         String sql = "select * from likes\n" +
-                "    where type_like = ?;";
+                "    join posts on posts.post_id = likes.post_id" +
+                "    where posts.post_id = ?;";
 
-        return Optional.ofNullable(DataAccessUtils.singleResult(
-                jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Like.class), post)
-        ));
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper(Like.class), postId);
+    }
+    public List<Like> getLikePost(Long userId, Long postId) {
+        String sql = "select * from likes where user_id = ? and post_id = ?;";
+        List query = jdbcTemplate.query(sql, new LikeMapper(), userId, postId);
+        return query;
+    }
+    private Date convertToDateViaSqlDate(LocalDate dateToConvert) {
+        return java.sql.Date.valueOf(dateToConvert);
+    }
+
+    public Long getUsersLikesPost(Long postId){
+        String sql = "select count(user_id) from likes where post_id = ? group by post_id;";
+        try {
+            return jdbcTemplate.queryForObject(sql, Long.class, postId);
+        } catch (EmptyResultDataAccessException e){
+            return 0L;
+        }
     }
 }

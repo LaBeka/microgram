@@ -1,84 +1,77 @@
 package com.example.microgram.controller;
 
-import com.example.microgram.dto.ErrorDto;
+import com.example.microgram.dto.ResultDto;
 import com.example.microgram.dto.UserDto;
 import com.example.microgram.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 
-@Controller
+@RestController
 @AllArgsConstructor
+@RequestMapping(value = "/user")
 public class UserController {
     private UserService service;
 
-    @GetMapping(value = "/findUserEmail/{email}")
-    public ResponseEntity findUserByEmail(String email){
-        ArrayList<String> validateErrors = new ArrayList<>();
-
-        UserDto userFound = service.getUserByEmail(email);
-        if(userFound == null){
-            validateErrors.add("User by this email not found");
-            return new ResponseEntity<ErrorDto>(new ErrorDto(validateErrors), HttpStatus.BAD_REQUEST);
+    @GetMapping(value = "/find/{email}")
+    public ResponseEntity findUserByEmail(@PathVariable String email){
+        HashMap<String, Object> userFound = service.findUserByEmail(email);
+        ResultDto resultDto = (ResultDto) userFound.get("error");
+        UserDto user = (UserDto) userFound.get("userFound");
+        if(resultDto == null){
+            return new ResponseEntity(user, HttpStatus.OK);
         }
-        return new ResponseEntity("Success", HttpStatus.OK);
+        return new ResponseEntity(resultDto, HttpStatus.BAD_REQUEST);
     }
 
-    @GetMapping(value = "/findUserAccount/{accountName}")
+    @GetMapping(value = "/findByAccount/{accountName}")
     public ResponseEntity findUserByAccountName(@PathVariable String accountName){
-        ArrayList<String> validateErrors = new ArrayList<>();
-        UserDto userFound = service.getUserByAccountName(accountName);
-        if(userFound == null){
-            validateErrors.add("User by this account name not found");
-            return new ResponseEntity<ErrorDto>(new ErrorDto(validateErrors), HttpStatus.BAD_REQUEST);
+        HashMap<String, Object> userFound = service.findUserByAccount(accountName);
+        ResultDto resultDto = (ResultDto) userFound.get("error");
+        UserDto user = (UserDto) userFound.get("userFound");
+        if(resultDto == null){
+            return new ResponseEntity(user, HttpStatus.OK);
         }
-        return new ResponseEntity("Success", HttpStatus.OK);
+        return new ResponseEntity(resultDto, HttpStatus.BAD_REQUEST);
     }
 
-    @GetMapping(value = "/findUserName/{userName}")
-    public ResponseEntity findUserByName(@PathVariable String userName){
-        ArrayList<String> validateErrors = new ArrayList<>();
-        UserDto userFound = service.getUserByName(userName);
-        if(userFound == null){
-            validateErrors.add("User by this name not found");
-            return new ResponseEntity<ErrorDto>(new ErrorDto(validateErrors), HttpStatus.BAD_REQUEST);
+    @GetMapping(value = "/findByName/{userName}")
+    public ResponseEntity findUserByName(@PathVariable String name){
+        HashMap<String, Object> userFound = service.findUserByName(name);
+        ResultDto resultDto = (ResultDto) userFound.get("error");
+        UserDto user = (UserDto) userFound.get("userFound");
+        if(resultDto == null){
+            return new ResponseEntity(user, HttpStatus.OK);
         }
-        return new ResponseEntity("Success", HttpStatus.OK);
+        return new ResponseEntity(resultDto, HttpStatus.BAD_REQUEST);
     }
 
     @GetMapping("/deleteUser/{email}")
     public ResponseEntity deleteUserByEmail(@PathVariable String email){
-        ArrayList<String> validateErrors= new ArrayList<>();
-        Optional deleted = service.deleteUserByEmail(email);
-        if(!deleted.isPresent()){
-            validateErrors.add("User by this email is not found");
-            return new ResponseEntity<ErrorDto>(new ErrorDto(validateErrors), HttpStatus.BAD_REQUEST);
-        }
+//        ArrayList<String> validateErrors= new ArrayList<>();
+//        Optional deleted = service.deleteUserByEmail(email);
+//        if(!deleted.isPresent()){
+//            validateErrors.add("User by this email is not found");
+//            return new ResponseEntity<ResultDto>(new ResultDto(validateErrors), HttpStatus.BAD_REQUEST);
+//        }
         return new ResponseEntity("Success", HttpStatus.OK);
     }
 
-    @DeleteMapping(value = "deleteAllUsers")
-    public ResponseEntity deleteAll() throws SQLException {
-        return new ResponseEntity<String>(service.deleteAll(), HttpStatus.OK);
-    }
+//    @DeleteMapping(value = "deleteAllUsers")
+//    public ResponseEntity deleteAll() throws SQLException {
+//        return new ResponseEntity<String>(service.deleteAll(), HttpStatus.OK);
+//    }
 
     @GetMapping(value = "/showUsers")
     public ResponseEntity getUsers(){
         List<UserDto> listUsers = service.getUsers();
-        ArrayList<String> validateErrors = new ArrayList<>();
         if(listUsers.size() == 0){
-            validateErrors.add("There is no users");
-            return new ResponseEntity<ErrorDto>(new ErrorDto(validateErrors), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity("No users to show!", HttpStatus.OK);
         }
-        return new ResponseEntity<List<UserDto>>(listUsers, HttpStatus.OK);
+        return new ResponseEntity(listUsers, HttpStatus.OK);
     }
 }

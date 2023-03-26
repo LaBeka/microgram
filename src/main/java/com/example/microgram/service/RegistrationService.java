@@ -2,6 +2,7 @@ package com.example.microgram.service;
 
 import com.example.microgram.dao.RegisterUserDao;
 import com.example.microgram.dto.RegisterUserDto;
+import com.example.microgram.dto.ResultDto;
 import com.example.microgram.entity.User;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,25 +15,31 @@ import java.util.Optional;
 public class RegistrationService {
     private RegisterUserDao regUserDao;
 
-    public boolean findUserByEmail(String email){
-        String sql = "select * from users where email = ?;";
-        Optional<User> user = regUserDao.ifUserExists(sql, email);
-        if(user.isPresent()) {
-            return false;
-        } else{
-            return true;
+    public ResultDto registerNewUser(RegisterUserDto userDto) {
+        String validateErrors = userDto.validateUserData();
+        if(!validateErrors.isEmpty()){
+            return ResultDto.builder()
+                    .message(validateErrors)
+                    .build();
         }
-    }
 
-    public boolean registerUser(RegisterUserDto data){
-        String sql = "insert into users (account_name, " +
-                "email, " +
-                "password, " +
-                "post_quantity, " +
-                "follow_quantity, " +
-                "follower_quantity, " +
-                "user_name)\n" +
-                "values (?, ?, ?, ?, ?, ?, ?);";
-        return regUserDao.registerUser(data, sql);
+        Optional<User> userExists = regUserDao.ifUserExists(userDto);
+        if (userExists.isPresent()) {
+            return ResultDto.builder()
+                    .message("User with this email and account name already exists")
+                    .build();
+        }
+
+        var newUser = User.builder()
+                .accountName(userDto.getAccountName())
+                .email(userDto.getEmail())
+                .password(userDto.getPassword())
+                .name(userDto.getName())
+                .build();
+        String answer = regUserDao.createNewUser(newUser);
+
+        return ResultDto.builder()
+                .message(answer)
+                .build();
     }
 }

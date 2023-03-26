@@ -3,19 +3,17 @@ package com.example.microgram.entity;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
+import lombok.RequiredArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@RequiredArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Comment {
-    private int commentId;
-    private int userId;
+    private Long commentId;
     private String commentText;
-
-    @DateTimeFormat(fallbackPatterns = "dd/MM/yyyy")
-    private Date commentDate;
+    private LocalDate commentDate;
+    private Long userId;
+    private Long postId;
 }

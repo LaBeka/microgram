@@ -1,15 +1,17 @@
 package com.example.microgram.dto;
 
-import com.example.microgram.entity.LikableType;
-import com.example.microgram.entity.User;
+import lombok.Builder;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
 @Data
+@Builder
 public class LIkeDto {
-    private LocalDate like_date;
-    private User user_id;
-    private LikableType type;
-    private int entityId;
+    private Long likeId;
+    private Long userId;
+    @DateTimeFormat(fallbackPatterns = "dd/MM/yyyy")
+    private LocalDate likeDate;
+    private Long postId;
 }
