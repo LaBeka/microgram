@@ -39,12 +39,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
 //                .antMatchers("/register/**").hasRole("USER")
-                .antMatchers(HttpMethod.POST, "/user/**").fullyAuthenticated()
-                .antMatchers(HttpMethod.POST, "/register/**").fullyAuthenticated()
-                .antMatchers(HttpMethod.POST, "/post/**").fullyAuthenticated()
-                .antMatchers(HttpMethod.POST, "/comment/**").fullyAuthenticated()
-                .antMatchers(HttpMethod.POST, "/follow/**").fullyAuthenticated()
-                .antMatchers(HttpMethod.POST, "/like/**").fullyAuthenticated()
+                .antMatchers("/user/**").fullyAuthenticated()
+                .antMatchers("/register/**").fullyAuthenticated()
+                .antMatchers("/post/**").fullyAuthenticated()
+                .antMatchers("/comment/**").fullyAuthenticated()
+                .antMatchers("/follow/**").fullyAuthenticated()
+                .antMatchers("/like/**").fullyAuthenticated()
 
                 .antMatchers("/**").permitAll()
                 .and().formLogin()
