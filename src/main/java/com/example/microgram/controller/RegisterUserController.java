@@ -15,7 +15,7 @@ public class RegisterUserController {
     private RegistrationService service;
 
     @PostMapping
-    public ResultDto register(@RequestBody Authentication data) {
-        return service.registerNewUser((RegisterUserDto) data);
+    public ResultDto register(@RequestBody RegisterUserDto data) {
+        return service.registerNewUser(data);
     }
 }
