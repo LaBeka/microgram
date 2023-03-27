@@ -3,6 +3,7 @@ package com.example.microgram.configurations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -37,8 +38,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/register/**").hasRole("USER")
-                .antMatchers("/user/**", "/post/**", "/comment/**", "/follow/**", "/like/**").hasAnyRole("ADMIN", "USER", "GUEST")
+//                .antMatchers("/register/**").hasRole("USER")
+                .antMatchers(HttpMethod.POST, "/user/**").fullyAuthenticated()
+                .antMatchers(HttpMethod.POST, "/register/**").fullyAuthenticated()
+                .antMatchers(HttpMethod.POST, "/post/**").fullyAuthenticated()
+                .antMatchers(HttpMethod.POST, "/comment/**").fullyAuthenticated()
+                .antMatchers(HttpMethod.POST, "/follow/**").fullyAuthenticated()
+                .antMatchers(HttpMethod.POST, "/like/**").fullyAuthenticated()
+
                 .antMatchers("/**").permitAll()
                 .and().formLogin()
                 .and().logout().permitAll();
