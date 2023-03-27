@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -22,7 +23,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private DataSource dataSource;
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return NoOpPasswordEncoder.getInstance();
+        return new BCryptPasswordEncoder();
     }
 
     @Override
@@ -40,14 +41,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
 //                .antMatchers("/register/**").hasRole("USER")
-                .antMatchers("/user/**").fullyAuthenticated()
+                .antMatchers(HttpMethod.GET, "/user/**").hasRole("USER")
                 .antMatchers("/register/**").fullyAuthenticated()
-                .antMatchers("/post/**").fullyAuthenticated()
-                .antMatchers("/comment/**").fullyAuthenticated()
-                .antMatchers("/follow/**").fullyAuthenticated()
-                .antMatchers("/like/**").fullyAuthenticated()
-
-                .antMatchers("/**").permitAll();
+                .antMatchers("/post/**").hasRole("USER")
+                .antMatchers("/comment/**").hasRole("USER")
+                .antMatchers("/follow/**").hasRole("USER")
+                .antMatchers("/like/**").hasRole("USER")
+                //.antMatchers("/**").permitAll()
+        ;
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.httpBasic();
         http.formLogin().disable().logout().disable();
