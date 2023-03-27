@@ -16,5 +16,4 @@ public class Post{
 
     @DateTimeFormat(fallbackPatterns = "dd/MM/yyyy")
     private LocalDate postDate;
-
 }

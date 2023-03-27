@@ -28,14 +28,18 @@ public class RegisterUserDao extends BaseDao {
                 "account_name, " +
                 "email, " +
                 "password, " +
-                "user_name)\n" +
-                "values (?, ?, ?, ?);";
+                "user_name, " +
+                "roles," +
+                "enabled)\n" +
+                "values (?, ?, ?, ?, ?, ?);";
         int update = jdbcTemplate.update(conn -> {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, newUser.getAccountName());
             ps.setString(2, newUser.getEmail());
             ps.setString(3, newUser.getPassword());
             ps.setString(4, newUser.getName());
+            ps.setString(5, newUser.getRoles());
+            ps.setBoolean(6, newUser.isEnabled());
             return ps;
         });
         if (update == 1){
