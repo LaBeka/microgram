@@ -2,6 +2,7 @@ package com.example.microgram.dao;
 
 import com.example.microgram.entity.User;
 import com.example.microgram.mappers.UserMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -11,9 +12,15 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserDao extends BaseDao{
-    public UserDao(JdbcTemplate jdbcTemplate) {
-        super(jdbcTemplate);
+@RequiredArgsConstructor
+public class UserDao{
+    private final JdbcTemplate jdbcTemplate;
+
+    public Optional<User> loadUserByEmail(String email){
+        String sql = "select * from users where email = ?;";
+        return Optional.ofNullable(DataAccessUtils.singleResult(
+                jdbcTemplate.query(sql, new UserMapper(), email)
+        ));
     }
 
     public Optional<User> userExistsEmail(String email){
@@ -54,7 +61,7 @@ public class UserDao extends BaseDao{
         }
     }
 
-    public Long getUsersFollowerQuantity(User user){
+    public Long getCountUsersFollower(User user){
         String sql = "select count(user_being_followed) from follows where user_being_followed = ? group by user_being_followed;";
         try {
             return jdbcTemplate.queryForObject(sql, Long.class, user.getUserId());
@@ -62,7 +69,7 @@ public class UserDao extends BaseDao{
             return 0L;
         }
     }
-    public Long getUsersFollowingQuantity(User user){
+    public Long getCountUsersFollowing(User user){
         String sql = "select count(user_following) from follows where user_following = ? group by user_following;";
         try {
             return jdbcTemplate.queryForObject(sql, Long.class, user.getUserId());

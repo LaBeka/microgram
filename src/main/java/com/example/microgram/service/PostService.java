@@ -3,12 +3,14 @@ package com.example.microgram.service;
 import com.example.microgram.dao.PostDao;
 import com.example.microgram.dao.UserDao;
 import com.example.microgram.dto.PostDto;
+import com.example.microgram.dto.PostDtoShow;
 import com.example.microgram.dto.ResultDto;
 import com.example.microgram.entity.Post;
 import com.example.microgram.entity.User;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -19,7 +21,7 @@ public class PostService {
     private PostDao postDao;
     private UserDao userDao;
 
-    public ResultDto createNewPost(PostDto post) {
+    public ResultDto createNewPost(PostDto post, User user) {
         String validateErrors = post.validatePostData();
         if (!validateErrors.isEmpty()) {
             return ResultDto.builder()
@@ -27,65 +29,46 @@ public class PostService {
                     .build();
         }
 
-        Optional<User> getUser = userDao.userExistsID(post.getUserId());
-        if (!getUser.isPresent()) {
-            return ResultDto.builder()
-                    .message("\nUser by '" + post.getUserId() + "' does not exist.\n")
-                    .build();
-        }
-        String result = postDao.newPost(post);
-
+        String result = postDao.newPost(post, user);
         return ResultDto.builder()
                 .message(result)
                 .build();
     }
 
-    public List<PostDto> getOthersPosts(Long userId){
-        Optional<User> getUser = userDao.userExistsID(userId);
-        if (!getUser.isPresent()) {
-            return null;
-        }
-
-        List<Post> listPosts = postDao.getOthersPosts(userId);
+    public List<PostDtoShow> getMyPosts(User user){
+        List<Post> listPosts = postDao.getMyPosts(user);
         return listPosts.stream()
-                .map(p -> PostDto.buildPostDTO(p))
+                .map(p -> PostDtoShow.buildPostDTO(p, user))
                 .collect(Collectors.toList());
     }
 
-    public List<PostDto> getOthersPostsByFollowings(Long userId){
-        Optional<User> getUser = userDao.userExistsID(userId);
-        if (!getUser.isPresent()) {
-            return null;
-        }
-
-        List<Post> listPosts = postDao.getPostsByFollowings(userId);
+    public List<PostDtoShow> getOthersPosts(User user){
+        List<Post> listPosts = postDao.getOthersPosts(user.getUserId());
         return listPosts.stream()
-                .map(p -> PostDto.buildPostDTO(p))
+                .map(p -> PostDtoShow.buildPostDTO(p, user))
                 .collect(Collectors.toList());
     }
 
-    public ResultDto deleteThePost(PostDto postDto) {
-        String validateErrors = postDto.validatePostData();
-        if (!validateErrors.isEmpty()) {
-            return ResultDto.builder()
-                    .message(validateErrors)
-                    .build();
-        }
+    public List<PostDtoShow> getOthersPostsByFollowings(User user){
+        List<Post> listPosts = postDao.getPostsByFollowings(user.getUserId());
 
-        Optional<Post> getPost = postDao.postExists(postDto);
+        List<PostDtoShow> posts = new ArrayList<>();
+        for (Post p : listPosts) {
+            Optional<User> userFollow = userDao.userExistsID(p.getUserId());
+            posts.add(PostDtoShow.buildPostDTO(p, userFollow.get()));
+        }
+        return posts;
+    }
+
+    public ResultDto deleteThePost(Long post, User user) {
+        Optional<Post> getPost = postDao.postExistsID(post);
         if (!getPost.isPresent()) {
             return ResultDto.builder()
-                    .message("'" + postDto.toString() + "' does not exist.\n")
+                    .message("'" + post.toString() + "' does not exist.")
                     .build();
         }
-        Optional<User> getUser = userDao.userExistsID(postDto.getUserId());
-        if (!getUser.isPresent()) {
-            return ResultDto.builder()
-                    .message("'" + postDto.getUserId() + "' does not exist.\n")
-                    .build();
-        }
-
-        if(getUser.get().getUserId() != getPost.get().getUserId()){
+        Optional<Post> getRightPost = postDao.myPostExists(post, user);
+        if(!getRightPost.isPresent()){
             return ResultDto.builder()
                     .message("User of this post is another user!")
                     .build();

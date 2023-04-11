@@ -11,7 +11,6 @@ import java.time.LocalDate;
 @Builder
 public class CommentDto {
     private String commentText;
-    private Long userId;
     private Long postId;
 
     public String validateCommentData(){
@@ -22,16 +21,7 @@ public class CommentDto {
         if(postId == null){
             messageBack += "Specify what you are commenting! ";
         }
-        if(userId == null){
-            messageBack += "Specify who is commenting! ";
-        }
         return messageBack;
     }
 
-    public static CommentDto buildCommentDTO(Comment comment){
-        return CommentDto.builder()
-                .commentText(comment.getCommentText())
-                .userId(comment.getUserId())
-                .build();
-    }
 }

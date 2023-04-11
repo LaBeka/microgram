@@ -1,6 +1,8 @@
 package com.example.microgram.entity;
 
 public interface Likable {
-    LikableType getType();
-    int like_id();
+//    void likePost(Post post);
+//    void likeComment(Comment comment);
+    //LikeType getType();
+    Long getId();
 }

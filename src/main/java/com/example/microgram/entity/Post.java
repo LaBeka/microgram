@@ -8,7 +8,7 @@ import java.time.LocalDate;
 
 @Data
 @RequiredArgsConstructor
-public class Post{
+public class Post implements Likable{
     private Long postId;
     private Long userId;
     private String photo;
@@ -16,4 +16,14 @@ public class Post{
 
     @DateTimeFormat(fallbackPatterns = "dd/MM/yyyy")
     private LocalDate postDate;
+
+//    @Override
+//    public LikeType getType() {
+//        return LikeType.POST;
+//    }
+
+    @Override
+    public Long getId() {
+        return postId;
+    }
 }

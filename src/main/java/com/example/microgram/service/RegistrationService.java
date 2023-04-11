@@ -3,17 +3,20 @@ package com.example.microgram.service;
 import com.example.microgram.dao.RegisterUserDao;
 import com.example.microgram.dto.RegisterUserDto;
 import com.example.microgram.dto.ResultDto;
-import com.example.microgram.entity.User;
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-
 @Service
-@AllArgsConstructor
-public class RegistrationService {
+public class RegistrationService  {
+
+    @Autowired
     private RegisterUserDao regUserDao;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public ResultDto registerNewUser(RegisterUserDto userDto) {
         String validateErrors = userDto.validateUserData();
@@ -23,17 +26,17 @@ public class RegistrationService {
                     .build();
         }
 
-        Optional<User> userExists = regUserDao.ifUserExists(userDto);
+        Optional<RegisterUserDto> userExists = regUserDao.ifIdenticalUserExists(userDto);
         if (userExists.isPresent()) {
             return ResultDto.builder()
                     .message("User with this email and account name already exists")
                     .build();
         }
 
-        var newUser = User.builder()
+        var newUser = RegisterUserDto.builder()
                 .accountName(userDto.getAccountName())
                 .email(userDto.getEmail())
-                .password(userDto.getPassword())
+                .password(passwordEncoder.encode(userDto.getPassword()))
                 .name(userDto.getName())
                 .build();
         String answer = regUserDao.createNewUser(newUser);

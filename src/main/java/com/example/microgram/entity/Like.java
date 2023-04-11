@@ -9,8 +9,16 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 public class Like {
     private Long likeId;
+    private LikeType likeType;
     private Long userId;
     @DateTimeFormat(fallbackPatterns = "dd/MM/yyyy")
     private LocalDate likeDate;
-    private Long postId;
+    private Long entityId;
+
+    /*
+    "likeType": "post",
+    "userId": "2",
+    "likeDate": "2023-01-03",
+    "entity_id": 2
+    */
 }

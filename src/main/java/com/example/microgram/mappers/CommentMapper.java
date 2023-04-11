@@ -5,14 +5,15 @@ import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-public class CommentMapper implements RowMapper {
+public class CommentMapper implements RowMapper<Comment> {
     @Override
-    public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+    public Comment mapRow(ResultSet rs, int rowNum) throws SQLException {
         Comment comm = new Comment();
         comm.setCommentId(rs.getLong("comment_id"));
-        comm.setUserId(rs.getLong("user_id"));
         comm.setCommentText(rs.getString("comment_text"));
         comm.setCommentDate(rs.getDate("comment_date").toLocalDate());
+        comm.setUserId(rs.getLong("user_id"));
+        comm.setPostId(rs.getLong("post_id"));
         return comm;
     }
 }
