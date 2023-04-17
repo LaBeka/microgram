@@ -8,7 +8,6 @@ import lombok.*;
 @AllArgsConstructor
 public class RegisterUserDto {
     private Long userId;
-
     @NonNull
     private String accountName;
     @NonNull

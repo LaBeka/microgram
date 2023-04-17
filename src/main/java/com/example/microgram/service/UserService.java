@@ -47,6 +47,9 @@ public class UserService implements UserDetailsService {
         Optional<User> getUser = userDao.userExistsName(name);
         return returnUserData(getUser, name);
     }
+    public Optional<User> findUserById(Long id){
+        return userDao.userExistsID(id);
+    }
 
     private HashMap<String, Object> returnUserData(Optional<User> getUser, String data) {
         HashMap<String, Object> returnData = new HashMap<>();

@@ -1,6 +1,7 @@
 package com.example.microgram.dto;
 
 import com.example.microgram.entity.Post;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -9,6 +10,7 @@ import java.time.LocalDate;
 
 @Data
 @Builder
+@AllArgsConstructor
 public class PostDto {
     private String photo;
     private String description;

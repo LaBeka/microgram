@@ -31,7 +31,7 @@ public class PostDao {
 
         int update = jdbcTemplate.update(sqlPost,
                 user.getUserId(),
-                "Some photo of user " + user.getUserId(),
+                post.getPhoto(),
                 post.getDescription(),
                 java.sql.Date.valueOf(LocalDate.now()));
         if(update == 1) {
@@ -50,6 +50,7 @@ public class PostDao {
         return jdbcTemplate.query(sql, new PostMapper(), userId);
     }
 
+    // getPostsByUserName// if i am following
     public List<Post> getPostsByFollowings(Long userId){
         String sql = "select * from posts\n" +
                 "    join follows on posts.user_id = follows.user_being_followed" +

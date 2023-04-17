@@ -2,6 +2,7 @@ package com.example.microgram.dto;
 
 import com.example.microgram.entity.Comment;
 import com.example.microgram.entity.Post;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
@@ -9,6 +10,7 @@ import java.time.LocalDate;
 
 @Data
 @Builder
+@AllArgsConstructor
 public class CommentDto {
     private String commentText;
     private Long postId;

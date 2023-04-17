@@ -21,6 +21,9 @@ public class PostService {
     private PostDao postDao;
     private UserDao userDao;
 
+    public Optional<Post> findPostById(Long id){
+        return postDao.postExistsID(id);
+    }
     public ResultDto createNewPost(PostDto post, User user) {
         String validateErrors = post.validatePostData();
         if (!validateErrors.isEmpty()) {
@@ -61,6 +64,7 @@ public class PostService {
     }
 
     public ResultDto deleteThePost(Long post, User user) {
+
         Optional<Post> getPost = postDao.postExistsID(post);
         if (!getPost.isPresent()) {
             return ResultDto.builder()

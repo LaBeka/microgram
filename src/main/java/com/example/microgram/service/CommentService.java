@@ -27,12 +27,12 @@ public class CommentService {
                     .message(error)
                     .build();
         }
-        Optional<Post> getPost = postDao.postExistsID(data.getPostId());
-        if (!getPost.isPresent()) {
-            return ResultDto.builder()
-                    .message("Post by '" + data.getPostId() + "' does not exist. ")
-                    .build();
-        }
+//        Optional<Post> getPost = postDao.postExistsID(data.getPostId());
+//        if (!getPost.isPresent()) {
+//            return ResultDto.builder()
+//                    .message("Post by '" + data.getPostId() + "' does not exist. ")
+//                    .build();
+//        }
 
         Optional<Comment> ifThisCommentExists = commentDao.getIdenticalComment(data, user);
         if (ifThisCommentExists.isPresent()) {

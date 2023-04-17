@@ -42,6 +42,7 @@ public class LikeController {
 
     //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     @PostMapping(value = "/likeTheComment")
+    //("/like/{id}")
     public ResultDto likeTheComment(@RequestBody LIkeDto data, Authentication auth){
         User user = (User) auth.getPrincipal();
         return likeService.likeTheComment(data, user);

@@ -11,17 +11,9 @@ import java.time.LocalDate;
 @Data
 public class LIkeDto {
     private Long likeId;
-    private String typeStr;
     private LikeType likeType;
+    private String typeStr;
     private Long entityId;
-//    public LIkeDto validateData(){
-//        for (LikeType value : LikeType.values()) {
-//            if(value.getType().equals(typeStr.toLowerCase())){
-//                this.likeType = value;
-//                break;
-//            }
-//        }
-//    }
     public LIkeDto(
             String typeStr,
             Long entityId) {
