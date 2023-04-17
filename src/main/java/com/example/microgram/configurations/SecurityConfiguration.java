@@ -35,14 +35,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
 
         http.authorizeRequests()
-                .antMatchers("/post/**")
-                .fullyAuthenticated()
+//                .antMatchers("/post/**")
+//                .fullyAuthenticated()
 
                 .antMatchers(HttpMethod.GET,"/user/**")
                 .fullyAuthenticated()
 
-                .antMatchers(HttpMethod.POST,"/comment/**")
-                .fullyAuthenticated()
+//                .antMatchers(HttpMethod.POST,"/comment/**")
+//                .fullyAuthenticated()
 
                 .antMatchers(HttpMethod.POST,"/like/**")
                 .fullyAuthenticated()
