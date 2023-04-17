@@ -17,7 +17,6 @@ function hideSplashScreen() {
 }
 
 function createCommentElement(comment) {
-//    var postGroup = document.getElementById('post-card-group');
     var elementGroup = document.getElementById('comment-group');
 
     if (elementGroup == null) {
@@ -243,7 +242,7 @@ function getFormComment(id){
     var getCommentForm = document.getElementById("commentForm")
     getCommentForm.classList.replace('formHide', 'formShow');
 }
-
+var getCommentForm = document.getElementById("commentForm")
 const commentForm = document.getElementById('commentForm');
 const fileInputCommentText = document.getElementById('comment-text');
 const fileInputCommentUserId = document.getElementById('comment-user-id');
@@ -251,8 +250,6 @@ const fileInputCommentPostId = document.getElementById('comment-post-id');
 var commentCount = 1;
 
 commentForm.onsubmit = async (e) => {
-    //var fr = new FileReader();
-    //fr.onload = function () {
         createCommentElement({
             commentId: commentCount++,
             commentText: fileInputCommentText.value,
@@ -260,8 +257,10 @@ commentForm.onsubmit = async (e) => {
             userId: fileInputCommentUserId.value,
             postId: fileInputCommentPostId.value
         })
-    //}
-    //fr.readAsDataURL(fileInputPhoto.files[0]);
+    commentForm.reset();
+
+
+    getCommentForm.classList.replace('formShow', 'formHide');
 
     e.preventDefault();
     const form = e.target;
@@ -275,7 +274,19 @@ commentForm.onsubmit = async (e) => {
         body: data
     });
 
-    var getCommentForm = document.getElementById("commentForm")
-    getCommentForm.classList.replace('formShow', 'formHide');
 };
 
+function addpost(){
+
+    if(postForm.classList.contains('formShow')){
+        postForm.classList.replace('formShow', 'formHide');
+    }
+    postForm.classList.replace('formHide', 'formShow');
+}
+
+function addcomment(){
+    if(getCommentForm.classList.contains('formShow')){
+        getCommentForm.classList.replace('formShow', 'formHide');
+    }
+    getCommentForm.classList.replace('formHide', 'formShow');
+}

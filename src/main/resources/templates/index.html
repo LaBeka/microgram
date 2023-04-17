@@ -22,6 +22,8 @@
   </div>
 
   <div class="container" style="z-index: -1;" id="container">
+    <button onclick="addpost()">add post</button>
+    <button onclick="addcomment()">add comment</button>
     <form id="postForm" class="formShow">
       <p>Post area</p>
       <div class="form-group">
@@ -41,7 +43,7 @@
     <form id="commentForm" class="formHide">
       <p>Comment area</p>
       <div class="comment-form-group">
-        <input type="text" id="comment-text" accept="image/*">
+        <input type="text-area" id="comment-text">
       </div>
 
       <div class="comment-form-group">
