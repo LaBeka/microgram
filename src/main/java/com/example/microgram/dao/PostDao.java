@@ -21,6 +21,16 @@ import java.util.Optional;
 public class PostDao {
     private final JdbcTemplate jdbcTemplate;
 
+    public void createTable(){
+        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS posts\n" +
+                "(\n" +
+                "    post_id bigserial PRIMARY KEY,\n" +
+                "    user_id bigint REFERENCES users(user_id),\n" +
+                "    photo character varying(40),\n" +
+                "    description text ,\n" +
+                "    post_date date\n" +
+                ");");
+    }
     public String newPost(PostDto post, User user){
         String sqlPost = "insert into posts(" +
                 "user_id, " +

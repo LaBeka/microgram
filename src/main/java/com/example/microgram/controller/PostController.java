@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -75,9 +76,9 @@ public class PostController {
     }
 
     @GetMapping(value = "/othersPosts")
-    public ResponseEntity getOthersPosts(Authentication auth){
-        User user = (User) auth.getPrincipal();
-        List<PostDtoShow> othersPosts = postService.getOthersPosts(user);
+    public ResponseEntity getOthersPosts(Model model){
+        Optional<User> user = userService.findUserById(1L);
+        List<PostDtoShow> othersPosts = postService.getOthersPosts(user.get());
         if(othersPosts.size() == 0){
             return new ResponseEntity("No Posts found", HttpStatus.OK);
         }

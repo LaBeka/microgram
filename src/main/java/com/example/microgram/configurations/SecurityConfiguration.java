@@ -31,6 +31,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.httpBasic();
+//        http.cors().disable();
         http.formLogin().disable().logout().disable();
         http.csrf().disable();
 

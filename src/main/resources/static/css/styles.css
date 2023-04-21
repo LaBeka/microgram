@@ -86,7 +86,7 @@ input #file-upload-button {
 }
 
 .comment-group{
-    margin: 5% 5% 5% 5%
+    margin: 5% 5% 5% 5%;
     background-color: aqua;
     width: 100%;
     height: 100%;
@@ -104,7 +104,7 @@ input #file-upload-button {
 }
 .formShow {
     border: 1px solid red;
-    margin: 5% 5% 5% 5%
+    margin: 5% 5% 5% 5%;
 
 }
 .formHide{

@@ -1,12 +1,15 @@
 package com.example.microgram.utils;
 
 import com.example.microgram.dao.LikeDao;
+import com.example.microgram.dao.PostDao;
+import com.example.microgram.dao.RegisterUserDao;
 import com.example.microgram.dao.RoleDao;
 import com.example.microgram.entity.Roles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Role;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
@@ -20,23 +23,17 @@ public class InitDataBase {
 
     @Bean
     CommandLineRunner init(
+            RegisterUserDao regUserDao,
+            RoleDao roleDao,
+            PostDao postDao,
             LikeDao likeDao){
         return (args) -> {
-//            roleDao.dropTable();
-//            typeDao.dropTable();
-//            restDao.dropTable();
-//            foodDao.dropTable();
-//            orderDao.dropTable();
-//            customerDao.dropTable();
-            likeDao.createTable();
-//            customerDao.createTable();
-//            roleDao.createTable();
-//            restDao.createTable();
-//            foodDao.createTable();
-//            typeDao.createTable();
-//            orderDao.createTable();
+                regUserDao.createTable();
+                roleDao.createTable();
+                postDao.createTable();
+                likeDao.createTable();
 
-//            CustomerDto customer = new CustomerDto(
+                //            CustomerDto customer = new CustomerDto(
 //                    GenerateData.randomPersonName(),
 //                    GenerateData.randomEmail(),
 //                    passwordEncoder.encode("qwerty"));
