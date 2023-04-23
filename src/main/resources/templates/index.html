@@ -20,22 +20,18 @@
   <div class="splash" id="splash">
     <button type="button" class="btn btn-light" style="position: absolute; top: 44%; left:45%;" onclick="hideSplashScreen()">Show content</button>
   </div>
-  <div class="container">
-    <button onclick="showPostForm()">add post</button>
-<!--    <button onclick="showCommentForm()">add comment</button>-->
-    <form id="postForm" class="formHide">
-      <p>Post area</p>
-      <div class="form-group">
-        <input type="file" id="post-photo" accept="image/*">
-      </div>
-      <div class="form-group">
-        <input type="text" id="post-description" placeholder="Description of post">
-        <input type="hidden" id="post-user-id" name="user-id" value="1"/>
-      </div>
-      <div class="form-group">
-        <button type="submit">Submit</button>
-      </div>
+  <div id="postFormDiv">
+    <form id="postForm">
+      <input type="file" id="post-photo" name="photo" accept="image/*">
+      <input type="text" id="post-description" name="description" placeholder="Description of post">
+      <input type="hidden" id="post-user-id" name="user-id" name="userId" value="1"/>
+      <button type="submit">Submit</button>
     </form>
+  </div>
+  <div class="container">
+    <button onclick="showPostForm()">Show create post form</button>
+    <button onclick="hidePostForm()">Hide create post form</button>
+    <button onclick="getAllPosts()">Show all posts</button>
     <div class="post-card-group" id="post-card-group">
       <div class="card" id="card" style="display: none">
         <img class="card-img-top card-image" src="/data/images/1/trees.jpg" alt="Post photo" ondblclick="setTimeout(onClickLikePost(e), 2000)">
@@ -49,18 +45,12 @@
         <span class="post-user"><p> beka@gmail.com || Beka</p></span>
 
         <div id="comment-group">
-          <form id="commentForm" class="formHide">
+          <form id="commentForm">
             <p>Comment area</p>
-            <div class="form-group">
-              <input type="text-area" id="comment-text">
-            </div>
-            <div class="form-group">
+              <input type="text" id="comment-text" name="user-id" value="comment-text">
               <input type="hidden" id="comment-user-id" name="user-id" value="1"/>
               <input type="hidden" id="comment-post-id" name="post-id" value="1"/>
-            </div>
-            <div class="form-group">
               <button type="submit">Submit</button>
-            </div>
           </form>
         </div>
     </div>

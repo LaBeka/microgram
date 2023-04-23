@@ -4,6 +4,7 @@ import com.example.microgram.dao.PostDao;
 import com.example.microgram.dao.UserDao;
 import com.example.microgram.dto.PostDto;
 import com.example.microgram.dto.PostDtoShow;
+import com.example.microgram.dto.PostFrontDto;
 import com.example.microgram.dto.ResultDto;
 import com.example.microgram.entity.Post;
 import com.example.microgram.entity.User;
@@ -24,18 +25,8 @@ public class PostService {
     public Optional<Post> findPostById(Long id){
         return postDao.postExistsID(id);
     }
-    public ResultDto createNewPost(PostDto post, User user) {
-        String validateErrors = post.validatePostData();
-        if (!validateErrors.isEmpty()) {
-            return ResultDto.builder()
-                    .message(validateErrors)
-                    .build();
-        }
-
-        String result = postDao.newPost(post, user);
-        return ResultDto.builder()
-                .message(result)
-                .build();
+    public PostFrontDto createNewPost(PostDto post, User user) {
+        return postDao.newPost(post, user);
     }
 
     public List<PostDtoShow> getMyPosts(User user){
@@ -82,5 +73,9 @@ public class PostService {
         return ResultDto.builder()
                 .message(mess)
                 .build();
+    }
+
+    public List<PostFrontDto> allPosts() {
+        return postDao.getAllPosts();
     }
 }

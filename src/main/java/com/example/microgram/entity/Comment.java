@@ -6,23 +6,17 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Data
 @RequiredArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class Comment implements Likable{
+public class Comment {
     private Long commentId;
     private String commentText;
-    private LocalDate commentDate;
+    private LocalDateTime commentDateTime;
     private Long userId;
     private Long postId;
 
-//    @Override
-//    public LikeType getType() {
-//        return LikeType.COMMENT;
-//    }
-    @Override
-    public Long getId() {
-        return commentId;
-    }
 }

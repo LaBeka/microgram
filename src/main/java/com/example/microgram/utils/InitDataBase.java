@@ -1,9 +1,6 @@
 package com.example.microgram.utils;
 
-import com.example.microgram.dao.LikeDao;
-import com.example.microgram.dao.PostDao;
-import com.example.microgram.dao.RegisterUserDao;
-import com.example.microgram.dao.RoleDao;
+import com.example.microgram.dao.*;
 import com.example.microgram.entity.Roles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -26,13 +23,14 @@ public class InitDataBase {
             RegisterUserDao regUserDao,
             RoleDao roleDao,
             PostDao postDao,
-            LikeDao likeDao){
+            LikeDao likeDao,
+            CommentDao commentDao){
         return (args) -> {
                 regUserDao.createTable();
                 roleDao.createTable();
                 postDao.createTable();
                 likeDao.createTable();
-
+                commentDao.createTable();
                 //            CustomerDto customer = new CustomerDto(
 //                    GenerateData.randomPersonName(),
 //                    GenerateData.randomEmail(),

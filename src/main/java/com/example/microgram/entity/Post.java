@@ -5,25 +5,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @RequiredArgsConstructor
-public class Post implements Likable{
+public class Post{
     private Long postId;
     private Long userId;
     private String photo;
     private String description;
 
     @DateTimeFormat(fallbackPatterns = "dd/MM/yyyy")
-    private LocalDate postDate;
-
-//    @Override
-//    public LikeType getType() {
-//        return LikeType.POST;
-//    }
-
-    @Override
-    public Long getId() {
-        return postId;
-    }
+    private LocalDateTime postDateTime;
 }

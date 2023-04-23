@@ -1,10 +1,16 @@
 package com.example.microgram.dao;
 
+import com.example.microgram.dto.CommentFrontDto;
 import com.example.microgram.dto.PostDto;
+import com.example.microgram.dto.PostDtoShow;
+import com.example.microgram.dto.PostFrontDto;
+import com.example.microgram.entity.Comment;
 import com.example.microgram.entity.LikeType;
 import com.example.microgram.entity.Post;
 import com.example.microgram.entity.User;
+import com.example.microgram.mappers.CommentMapper;
 import com.example.microgram.mappers.PostMapper;
+import com.example.microgram.mappers.PostMapperUserName;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -13,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,7 +27,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class PostDao {
     private final JdbcTemplate jdbcTemplate;
-
+    private UserDao userDao;
     public void createTable(){
         jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS posts\n" +
                 "(\n" +
@@ -28,27 +35,49 @@ public class PostDao {
                 "    user_id bigint REFERENCES users(user_id),\n" +
                 "    photo character varying(40),\n" +
                 "    description text ,\n" +
-                "    post_date date\n" +
+                "    post_date_time timestamp\n" +
                 ");");
     }
-    public String newPost(PostDto post, User user){
+    public PostFrontDto newPost(PostDto post, User user){
         String sqlPost = "insert into posts(" +
                 "user_id, " +
                 "photo, " +
                 "description, " +
-                "post_date)\n" +
+                "post_date_time)\n" +
                 "values (?, ?, ?, ?);";
-
+        LocalDateTime ldt = LocalDateTime.now();
         int update = jdbcTemplate.update(sqlPost,
                 user.getUserId(),
                 post.getPhoto(),
                 post.getDescription(),
-                java.sql.Date.valueOf(LocalDate.now()));
+                java.sql.Timestamp.valueOf(ldt));
         if(update == 1) {
-            return "Added new post";
+            Optional<Post> createdPost = getIdenticalPost(post, user, ldt);
+            if(createdPost.isPresent()) {
+                return PostFrontDto.buildPost(createdPost.get(), user);
+            }
         }
-        return "Could not create the post";
+        return null;
     }
+
+    private Optional<Post> getIdenticalPost(PostDto post, User user, LocalDateTime ldt) {
+        String sql = "select * from posts " +
+                "where user_id = ? " +
+                "and photo = ? " +
+                "and description = ? " +
+                "and post_date_time = ? ;";
+        Optional<Post> getPost = Optional.ofNullable(DataAccessUtils.singleResult(
+                jdbcTemplate.query(
+                        sql,
+                        new PostMapper(),
+                        user.getUserId(),
+                        post.getPhoto(),
+                        post.getDescription(),
+                        ldt)
+        ));
+        return getPost;
+    }
+
     public List<Post> getMyPosts(User user){
         String sql = "select * from posts\n" +
                 "    where user_id = ?;";
@@ -125,5 +154,10 @@ public class PostDao {
                     " has been deleted!\n";
         }
         return  "Could not delete likes.\n";
+    }
+
+    public List<PostFrontDto> getAllPosts() {
+        String sql = "select * from posts;";
+        return jdbcTemplate.query(sql, new PostMapperUserName());
     }
 }

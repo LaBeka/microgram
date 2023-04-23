@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Builder
@@ -14,7 +15,7 @@ import java.util.Optional;
 public class PostDtoShow {
     private String user;
     private String photo;
-    private LocalDate postDate;
+    private LocalDateTime postDateTime;
     private String description;
 
     public static PostDtoShow buildPostDTO(Post post, User user){
@@ -23,7 +24,7 @@ public class PostDtoShow {
                 .user(user.getAccountName())
                 .photo(post.getPhoto())
                 .description(post.getDescription())
-                .postDate(post.getPostDate())
+                .postDateTime(post.getPostDateTime())
                 .build();
     }
 

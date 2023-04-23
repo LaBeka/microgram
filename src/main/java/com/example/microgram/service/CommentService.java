@@ -4,6 +4,7 @@ import com.example.microgram.dao.CommentDao;
 import com.example.microgram.dao.PostDao;
 import com.example.microgram.dao.UserDao;
 import com.example.microgram.dto.CommentDto;
+import com.example.microgram.dto.CommentFrontDto;
 import com.example.microgram.dto.ResultDto;
 import com.example.microgram.entity.Comment;
 import com.example.microgram.entity.Post;
@@ -20,31 +21,8 @@ public class CommentService {
     private UserDao userDao;
     private PostDao postDao;
 
-    public ResultDto addNewComment(CommentDto data, User user){
-        String error = data.validateCommentData();
-        if(!error.isEmpty()){
-            return ResultDto.builder()
-                    .message(error)
-                    .build();
-        }
-//        Optional<Post> getPost = postDao.postExistsID(data.getPostId());
-//        if (!getPost.isPresent()) {
-//            return ResultDto.builder()
-//                    .message("Post by '" + data.getPostId() + "' does not exist. ")
-//                    .build();
-//        }
-
-        Optional<Comment> ifThisCommentExists = commentDao.getIdenticalComment(data, user);
-        if (ifThisCommentExists.isPresent()) {
-            return ResultDto.builder()
-                    .message("This comment already exists.")
-                    .build();
-        }
-
-        String result = commentDao.addNewComment(data, user);
-        return ResultDto.builder()
-                .message(result)
-                .build();
+    public CommentFrontDto addNewComment(CommentDto data, User user){
+        return commentDao.addNewComment(data, user);
     }
 
     public ResultDto unComment(CommentDto data, User user){
@@ -55,7 +33,7 @@ public class CommentService {
                     .build();
         }
 
-        Optional<Comment> getIdenticalComment = commentDao.getIdenticalComment(data, user);
+        Optional<Comment> getIdenticalComment = commentDao.getComment(data, user);
         if (!getIdenticalComment.isPresent()) {
             return ResultDto.builder()
                     .message("This comment does not exist. ")

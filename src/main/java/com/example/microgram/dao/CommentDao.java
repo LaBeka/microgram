@@ -1,6 +1,7 @@
 package com.example.microgram.dao;
 
 import com.example.microgram.dto.CommentDto;
+import com.example.microgram.dto.CommentFrontDto;
 import com.example.microgram.entity.Comment;
 import com.example.microgram.entity.User;
 import com.example.microgram.mappers.CommentMapper;
@@ -9,8 +10,7 @@ import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import java.sql.Date;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -18,22 +18,43 @@ import java.util.Optional;
 public class CommentDao {
     private final JdbcTemplate jdbcTemplate;
 
-    public String addNewComment(CommentDto comment, User user){
+    public void createTable(){
+        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS comments_mic\n" +
+                "(\n" +
+                "    comment_id bigserial PRIMARY KEY,\n" +
+                "    comment_text text,\n" +
+                "    comment_datetime timestamp,\n" +
+                "    user_id bigint REFERENCES users(user_id),\n" +
+                "    post_id bigint REFERENCES posts(post_id)\n" +
+                ");");
+    }
+    public CommentFrontDto addNewComment(CommentDto commentDto, User user){
         String sql = "insert into comments_mic(" +
                 "comment_text, " +
-                "comment_date, " +
+                "comment_datetime, " +
                 "user_id," +
                 "post_id)\n" +
                 "values (?, ?, ?, ?);";
+        LocalDateTime ldt = LocalDateTime.now();
         int update = jdbcTemplate.update(sql,
-                comment.getCommentText(),
-                java.sql.Date.valueOf(LocalDate.now()),
+                commentDto.getCommentText(),
+                java.sql.Timestamp.valueOf(ldt),
                 user.getUserId(),
-                comment.getPostId());
+                commentDto.getPostId());
         if(update == 1){
-            return "Added new comment: " + comment;
+            Optional<Comment> createdComment = getIdenticalComment(commentDto, user, ldt);
+            if(createdComment.isPresent()) {
+                Comment comm = createdComment.get();
+                return CommentFrontDto.builder()
+                        .commentId(comm.getCommentId().toString())
+                        .commentText(comm.getCommentText())
+                        .commentDateTime(comm.getCommentDateTime().toString())
+                        .userId(comm.getUserId().toString())
+                        .postId(comm.getPostId().toString())
+                        .build();
+            }
         }
-        return "Unsuccessful";
+        return null;
     }
     public Optional<Comment> getUsersCommentById(Long commentId, User user){
         String sql = "select * from comments_mic " +
@@ -47,12 +68,31 @@ public class CommentDao {
                         commentId)
         ));
     }
-    public Optional<Comment> getIdenticalComment(CommentDto data, User user){
+    public Optional<Comment> getIdenticalComment(CommentDto data, User user, LocalDateTime ldt){
         String sql = "select * from comments_mic " +
-                "where comment_text in (?) " +
+                "where comment_text = ? " +
+                "and user_id = ? " +
+                "and post_id = ? " +
+                "and comment_datetime = ?;";
+
+        Optional<Comment> comment = Optional.ofNullable(DataAccessUtils.singleResult(
+                jdbcTemplate.query(
+                        sql,
+                        new CommentMapper(),
+                        data.getCommentText(),
+                        user.getUserId(),
+                        data.getPostId(),
+                        ldt)
+        ));
+        return comment;
+    }
+    public Optional<Comment> getComment(CommentDto data, User user){
+        String sql = "select * from comments_mic " +
+                "where comment_text = ? " +
                 "and user_id = ? " +
                 "and post_id = ?;";
-        return Optional.ofNullable(DataAccessUtils.singleResult(
+
+        Optional<Comment> comment = Optional.ofNullable(DataAccessUtils.singleResult(
                 jdbcTemplate.query(
                         sql,
                         new CommentMapper(),
@@ -60,8 +100,8 @@ public class CommentDao {
                         user.getUserId(),
                         data.getPostId())
         ));
+        return comment;
     }
-
     public String unComment(Comment comment) {
         String sql = "delete from comments_mic \n" +
                 "where comment_id = ?;";

@@ -14,7 +14,7 @@ public class PostMapper implements RowMapper<Post> {
         post.setUserId(rs.getLong("user_id"));
         post.setPhoto(rs.getString("photo"));
         post.setDescription(rs.getString("description"));
-        post.setPostDate(rs.getDate("post_date").toLocalDate());
+        post.setPostDateTime(rs.getTimestamp("post_date_time").toLocalDateTime());
         return post;
     }
 }
