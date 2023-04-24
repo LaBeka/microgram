@@ -4,7 +4,7 @@ import lombok.*;
 
 @Data
 @Builder
-@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@NoArgsConstructor(access = AccessLevel.PUBLIC, force = true)
 @AllArgsConstructor
 public class RegisterUserDto {
     private Long userId;

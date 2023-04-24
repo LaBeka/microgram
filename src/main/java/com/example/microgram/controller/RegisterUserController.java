@@ -4,6 +4,7 @@ import com.example.microgram.dto.ResultDto;
 import com.example.microgram.dto.RegisterUserDto;
 import com.example.microgram.service.RegistrationService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -17,4 +18,10 @@ public class RegisterUserController {
     public ResultDto register(@RequestBody RegisterUserDto data) {
         return service.registerNewUser(data);
     }
+    @GetMapping(value = "/auth")
+    public ResponseEntity auth(@RequestBody RegisterUserDto user){
+        System.out.println(user);
+        return ResponseEntity.ok().build();
+    }
+
 }

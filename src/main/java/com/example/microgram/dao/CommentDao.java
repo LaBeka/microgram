@@ -2,15 +2,19 @@ package com.example.microgram.dao;
 
 import com.example.microgram.dto.CommentDto;
 import com.example.microgram.dto.CommentFrontDto;
+import com.example.microgram.dto.PostFrontDto;
 import com.example.microgram.entity.Comment;
 import com.example.microgram.entity.User;
 import com.example.microgram.mappers.CommentMapper;
+import com.example.microgram.mappers.CommentMapperUserName;
+import com.example.microgram.mappers.PostMapperUserName;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -130,5 +134,10 @@ public class CommentDao {
             return "Success to update text of comment";
         }
         return "Unsuccessful";
+    }
+
+    public List<CommentFrontDto> getAllComment() {
+        String sql = "select * from comments_mic;";
+        return jdbcTemplate.query(sql, new CommentMapperUserName());
     }
 }

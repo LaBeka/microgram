@@ -5,6 +5,7 @@ import com.example.microgram.dao.PostDao;
 import com.example.microgram.dao.UserDao;
 import com.example.microgram.dto.CommentDto;
 import com.example.microgram.dto.CommentFrontDto;
+import com.example.microgram.dto.PostFrontDto;
 import com.example.microgram.dto.ResultDto;
 import com.example.microgram.entity.Comment;
 import com.example.microgram.entity.Post;
@@ -12,6 +13,7 @@ import com.example.microgram.entity.User;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -56,5 +58,9 @@ public class CommentService {
         return ResultDto.builder()
                 .message(message)
                 .build();
+    }
+
+    public List<CommentFrontDto> getAll() {
+        return commentDao.getAllComment();
     }
 }

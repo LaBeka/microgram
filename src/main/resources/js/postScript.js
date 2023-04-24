@@ -204,16 +204,12 @@ postForm.onsubmit = async (e) => {
     });
 };
 async function getAllPosts() {
-    const response = await fetch('http://localhost:8081/post/all');
-    const jsonData = await response.json();
-    addPost(jsonData);
-    jsonData.forEach(e => sortPosts(e));
-}
-function sortPosts(data){
-    //ask Ibragim;
-    data.forEach(p => {
-
-    })
+    const responsePost = await fetch('http://localhost:8081/post/all');
+    const jsonDataPost = await responsePost.json();
+    jsonDataPost.forEach(e => addPost(e));
+    const responseComment = await fetch('http://localhost:8081/comment/all');
+    const jsonDataComment = await responseComment.json();
+    jsonDataComment.forEach(e => createCommentElement(e));
 }
 function showCommentForm(id){
     const currentCommentForm = document.getElementById(`commentForm-${id}`);

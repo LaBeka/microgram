@@ -1,9 +1,6 @@
 package com.example.microgram.controller;
 
-import com.example.microgram.dto.CommentDto;
-import com.example.microgram.dto.CommentFrontDto;
-import com.example.microgram.dto.PostDto;
-import com.example.microgram.dto.ResultDto;
+import com.example.microgram.dto.*;
 import com.example.microgram.entity.Comment;
 import com.example.microgram.entity.Post;
 import com.example.microgram.entity.User;
@@ -17,11 +14,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -43,11 +42,19 @@ public class CommentController {
     public ResponseEntity createNewComment(@RequestParam("commentText") String commentText,
                                            @RequestParam("userId") String userId,
                                            @RequestParam("postId") String postId) throws IOException {
-        Optional<User> user = userService.findUserById(Long.parseLong(userId));
+        Long userID = 0L;
+        Long postID = 0L;
+        try{
+            userID = Long.parseLong(userId);
+            postID = Long.parseLong(postId);
+        } catch (Exception e){
+            return new ResponseEntity("Id is not a digit", HttpStatus.BAD_REQUEST);
+        }
+        Optional<User> user = userService.findUserById(userID);
         if(user.isEmpty()) {
             return new ResponseEntity("No user found by this id", HttpStatus.BAD_REQUEST);
         }
-        Optional<Post> post = postService.findPostById(Long.parseLong(postId));
+        Optional<Post> post = postService.findPostById(postID);
         if(post.isEmpty()) {
             return new ResponseEntity("No post found by this id", HttpStatus.BAD_REQUEST);
         }
@@ -61,6 +68,16 @@ public class CommentController {
         return new ResponseEntity(commentFrontDto, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/all")
+    @CrossOrigin(origins = "http://localhost:63342")
+    public ResponseEntity getAllComments(){
+        List<CommentFrontDto> allComm = service.getAll();
+        if(allComm.size() == 0){
+            return new ResponseEntity("No Posts found", HttpStatus.OK);
+        }
+        System.out.println(allComm.toString());
+        return new ResponseEntity(allComm, HttpStatus.OK);
+    }
     @PostMapping("/delete")
     public ResultDto deleteComment(@RequestBody CommentDto data, Authentication auth) {
         User user = (User) auth.getPrincipal();
