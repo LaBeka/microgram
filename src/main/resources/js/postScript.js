@@ -16,11 +16,11 @@ function hidePostForm(){
     postForm.setAttribute("style", "display: none;")
 }
 function createCommentElement(comment) {
-    let elementCommentGroup = document.getElementById('comment-group');
+    let elementCommentGroup = document.getElementById(`commentForm-${comment.postId}`);
     if (elementCommentGroup == null) {
         elementCommentGroup = document.createElement('div');
-        elementCommentGroup.classList.add('comment-group');
-        elementCommentGroup.id = 'comment-group';
+        elementCommentGroup.classList.add(`commentForm-${comment.postId}`);
+        elementCommentGroup.id = `commentForm-${comment.postId}`;
     }
 
     let element = document.createElement('div');
@@ -57,61 +57,28 @@ function createPostElement(post) {
         elementPostGroup.classList.add('post-card-group');
         elementPostGroup.id = 'post-card-group';
     }
-    let card = document.createElement("div");
-
+    let card  = document.createElement("div");
     card.classList.add('card');
     card.id = `card-${post.postId}`;
-    card.insertAdjacentHTML(
-        'afterBegin',
-        `<img class="card-img-top card-image" src=${post.photo} alt="Post photo" ondblclick="setTimeout(onClickLikePost(${post.postId}), 2000)">`
-    );
-    let cardIcons = document.createElement('div');
-    cardIcons.classList.add('card-body');
-    cardIcons.classList.add('card-body-icons');
-    cardIcons.id = 'card-body';
-
-    const objectlikeID = `icon-heart-${post.postId}`;
-    cardIcons.insertAdjacentHTML(
-        'beforeEnd',
-        `<i class="fa fa-heart unLikedIcon" onclick="onClickLike(${post.postId})" id=${objectlikeID}></i>`
-    );
-
-    const objectCommentID = `icon-comment-${post.postId}`;
-    cardIcons.insertAdjacentHTML(
-        'beforeEnd',
-        `<i class="fa fa-comment-o fa-icon-comment" onclick="showCommentForm(${post.postId})" id=${objectCommentID}></i>`
-    );
-
-    const objectMarkID = `icon-bookmark-${post.postId}`;
-    cardIcons.insertAdjacentHTML(
-        'beforeEnd',
-        `<i class="fa fa-bookmark unMarked" onclick="onClickBookmark(${post.postId})" id=${objectMarkID}></i>`
-    );
-    card.append(cardIcons);
-
-    card.insertAdjacentHTML(
-        'beforeEnd',
-        `<p class="post-text"> ${post.description} </p>`
-    );
-    card.insertAdjacentHTML(
-        'beforeEnd',
-        `<p class="post-date-time"> ${post.postDateTime} </p>`
-    );
-    card.insertAdjacentHTML(
-        'beforeEnd',
-        `<span class=post-user-${post.postId}><p> Post by: ${post.userName} </p></span>`
-    );
-    card.insertAdjacentHTML(
-        'beforeEnd',
-        `<form id="commentForm-${post.postId}" style="display: none">
-                <p>Comment #${post.postId}</p>
-                  <input type="text" id="comment-text-${post.postId}" name="commentText" placeholder="text"/>
-                  <input type="hidden" id="comment-user-${post.postId}" name="userId"/>
-                  <input type="hidden" id="comment-post-${post.postId}" name="postId"/>
-                  <button onclick="addComment(${post.postId})">Submit</button>
-               </form>`
-    );
-    container.append(elementPostGroup);
+    card.innerHTML =
+        `<img className="card-img-top card-image" src=${post.photo} alt="Post photo" ondblclick="setTimeout(onClickLikePost(${post.postId}), 2000)">
+            <div className="card-body card-body-icons" id="card-body">
+                <i className="fa fa-heart unLikedIcon" onClick="onClickLike(${post.postId})" id="icon-heart-${post.postId}"></i>
+                <i className="fa fa-comment-o fa-icon-comment" onClick="showCommentForm(${post.postId})" id="icon-comment-${post.postId}"></i>
+                <i className="fa fa-bookmark unMarked" onClick="onClickBookmark(${post.postId})" id="icon-bookmark-${post.postId}"></i>
+            </div>
+        
+            <p className="post-text">${post.description}</p>
+            <p className="post-date-time">${post.postDateTime}</p>
+            <span className="post-user-${post.postId}"> <p>${post.userName}</p> </span>
+        
+            <form id="commentForm-${post.postId}" style="display: none">
+                <p>Comment of the post  №${post.postId}</p>
+                <input type="text" id="comment-text-${post.postId}" name="commentText" placeholder="text">
+                <input type="hidden" id="comment-user-${post.postId}" name="userId">
+                <input type="hidden" id="comment-post-${post.postId}" name="postId">
+                <button onClick="addComment(${post.postId})">Submit</button>
+        </form>`;
     elementPostGroup.appendChild(card);
 }
 
