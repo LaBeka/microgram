@@ -61,16 +61,16 @@ function createPostElement(post) {
     card.classList.add('card');
     card.id = `card-${post.postId}`;
     card.innerHTML =
-        `<img className="card-img-top card-image" src=${post.photo} alt="Post photo" ondblclick="setTimeout(onClickLikePost(${post.postId}), 2000)">
-            <div className="card-body card-body-icons" id="card-body">
-                <i className="fa fa-heart unLikedIcon" onClick="onClickLike(${post.postId})" id="icon-heart-${post.postId}"></i>
-                <i className="fa fa-comment-o fa-icon-comment" onClick="showCommentForm(${post.postId})" id="icon-comment-${post.postId}"></i>
-                <i className="fa fa-bookmark unMarked" onClick="onClickBookmark(${post.postId})" id="icon-bookmark-${post.postId}"></i>
+        `<img class="card-img-top card-image" src=${post.photo} id="image-${post.id}" alt="Post photo" ondblclick="setTimeout(onClickLikePost(${post.postId}), 2000)">
+            <div class="card-body" id="card-body-${post.postId}">
+                <i class="fa fa-heart unLikedIcon" onClick="onClickLike(${post.postId})" id="icon-heart-${post.postId}"></i>
+                <i class="fa fa-comment-o fa-icon-comment" onClick="showCommentForm(${post.postId})" id="icon-comment-${post.postId}"></i>
+                <i class="fa fa-bookmark unMarked" style="padding-left: 62%" onClick="onClickBookmark(${post.postId})" id="icon-bookmark-${post.postId}"></i>
             </div>
         
-            <p className="post-text">${post.description}</p>
-            <p className="post-date-time">${post.postDateTime}</p>
-            <span className="post-user-${post.postId}"> <p>${post.userName}</p> </span>
+            <p class="post-text">${post.description}</p>
+            <p class="post-date-time">${post.postDateTime}</p>
+            <span class="post-user-${post.postId}"> <p>${post.userName}</p> </span>
         
             <form id="commentForm-${post.postId}" style="display: none">
                 <p>Comment of the post  №${post.postId}</p>
