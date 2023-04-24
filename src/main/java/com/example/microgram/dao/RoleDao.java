@@ -1,9 +1,9 @@
 package com.example.microgram.dao;
 
 
-import com.example.microgram.dto.RegisterUserDto;
+import com.example.microgram.dto.user.RegUserFrontDto;
+import com.example.microgram.dto.user.RegisterUserDto;
 import com.example.microgram.entity.Roles;
-import com.example.microgram.entity.User;
 import com.example.microgram.mappers.RoleMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -29,7 +29,7 @@ public class RoleDao  {
         jdbcTemplate.execute("drop table if exists roles cascade;");
     }
 
-    public String setRoleOfUser(RegisterUserDto user, Roles roles){
+    public String setRoleOfUser(RegUserFrontDto user, Roles roles){
         String sql = "insert into roles (user_id, user_role)\n" +
                 "VALUES(?, ?);";
         int update = jdbcTemplate.update(sql, user.getUserId(), roles.toString());

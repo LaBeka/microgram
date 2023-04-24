@@ -1,8 +1,7 @@
 package com.example.microgram.mappers;
 
 import com.example.microgram.dao.UserDao;
-import com.example.microgram.dto.CommentFrontDto;
-import com.example.microgram.entity.Comment;
+import com.example.microgram.dto.comment.CommentFrontDto;
 import com.example.microgram.entity.User;
 import com.example.microgram.utils.ApplicationContextHolder;
 import org.springframework.jdbc.core.RowMapper;

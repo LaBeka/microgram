@@ -1,10 +1,9 @@
 package com.example.microgram.dao;
 
-import com.example.microgram.dto.RegisterUserDto;
+import com.example.microgram.dto.user.RegUserFrontDto;
+import com.example.microgram.dto.user.RegisterUserDto;
 import com.example.microgram.entity.Roles;
-import com.example.microgram.entity.User;
 import com.example.microgram.mappers.RegisterUserMapper;
-import com.example.microgram.mappers.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.support.DataAccessUtils;
@@ -37,14 +36,14 @@ public class RegisterUserDao {
                 ");");
     }
 
-    public Optional<RegisterUserDto> ifIdenticalUserExists(RegisterUserDto userDto){
-        String sql = "select * from users where email = ? and account_name = ?;";
+    public Optional<RegUserFrontDto> ifIdenticalUserExists(RegisterUserDto userDto){
+        String sql = "select * from users where email = ? and account_name = ? and password = ?;";
         return Optional.ofNullable(DataAccessUtils.singleResult(
-                jdbcTemplate.query(sql, regUserMapper, userDto.getEmail(), userDto.getAccountName())
+                jdbcTemplate.query(sql, regUserMapper, userDto.getEmail(), userDto.getAccountName(), userDto.getPassword())
         ));
     }
 
-    public String createNewUser(RegisterUserDto newUser) {
+    public Optional<RegUserFrontDto> createNewUser(RegisterUserDto newUser) {
         String sql = "insert into users(" +
                 "account_name, " +
                 "email, " +
@@ -63,13 +62,13 @@ public class RegisterUserDao {
         });
 
         if (update == 1){
-            Optional<RegisterUserDto> user = getUserByEmail(newUser.getEmail());
+            Optional<RegUserFrontDto> user = getUserByEmail(newUser.getEmail());
             String messageBack = roleDao.setRoleOfUser(user.get(), Roles.USER);
-            return "Success! User is registered! " + messageBack;
+            return user;
         }
-        return "Register user failed";
+        return Optional.empty();
     }
-    public Optional<RegisterUserDto> getUserByEmail(String email){
+    public Optional<RegUserFrontDto> getUserByEmail(String email){
         String sql = "select * from users where email = ?;";
         return Optional.ofNullable(DataAccessUtils.singleResult(
                 jdbcTemplate.query(sql, regUserMapper, email)

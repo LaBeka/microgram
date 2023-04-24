@@ -1,13 +1,11 @@
 package com.example.microgram.controller;
 
 import com.example.microgram.dto.ResultDto;
-import com.example.microgram.dto.UserDto;
-import com.example.microgram.entity.User;
+import com.example.microgram.dto.user.UserDto;
 import com.example.microgram.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;

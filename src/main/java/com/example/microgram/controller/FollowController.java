@@ -2,7 +2,6 @@ package com.example.microgram.controller;
 
 import com.example.microgram.dto.FollowUserDto;
 import com.example.microgram.dto.ResultDto;
-import com.example.microgram.dto.UserDto;
 import com.example.microgram.entity.User;
 import com.example.microgram.service.FollowService;
 import lombok.AllArgsConstructor;

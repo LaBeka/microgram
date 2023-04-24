@@ -1,14 +1,10 @@
 package com.example.microgram.dao;
 
-import com.example.microgram.dto.CommentFrontDto;
-import com.example.microgram.dto.PostDto;
-import com.example.microgram.dto.PostDtoShow;
-import com.example.microgram.dto.PostFrontDto;
-import com.example.microgram.entity.Comment;
+import com.example.microgram.dto.post.PostDto;
+import com.example.microgram.dto.post.PostFrontDto;
 import com.example.microgram.entity.LikeType;
 import com.example.microgram.entity.Post;
 import com.example.microgram.entity.User;
-import com.example.microgram.mappers.CommentMapper;
 import com.example.microgram.mappers.PostMapper;
 import com.example.microgram.mappers.PostMapperUserName;
 import lombok.RequiredArgsConstructor;
@@ -16,10 +12,7 @@ import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import java.sql.Date;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 

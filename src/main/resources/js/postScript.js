@@ -9,7 +9,7 @@ function showPostForm(){
     const postFormDiv = document.getElementById('postFormDiv');
     const postForm = document.getElementById('postForm');
     postFormDiv.setAttribute("style", "width: 100%; height: 100%; background-color: green;")
-    postForm.setAttribute("style", "text-align: center; z-index: 1; overflow-y: scroll;")
+    postForm.setAttribute("style", "text-align: center; z-index: 1;")
 }
 function hidePostForm(){
     const postForm = document.getElementById('postForm');
@@ -175,6 +175,11 @@ const fileInputUserId = document.getElementById('post-user-id');
 postForm.onsubmit = async (e) => {
     postForm.classList.replace('formShow', 'formHide');
     e.preventDefault();
+    let photoSize = fileInputPhoto.files[0].size;
+    console.log(photoSize);
+    if(photoSize >= 1048575){
+        return alert("Photo size cannot be more then 1 megabyte, try to load another photo. Actual size of photo: " + photoSize);
+    }
     const data = new FormData();
     data.append('photo', fileInputPhoto.files[0]);
     data.append('description', fileInputDescr.value);
@@ -252,3 +257,28 @@ function addComment(id) {
     }
     commentForm.setAttribute("style", "display: none");
 }
+
+const registerForm = document.getElementById("regForm");
+registerForm.onsubmit = async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const data = new FormData(form);
+    // const userJSON = JSON.stringify(Object.fromEntries(data));
+    fetch('http://localhost:8081/register/reg', {
+        method: 'POST',
+        body: data
+    })
+        .then(response => {
+            if (response.status >= 400) {
+                throw new Error("Bad response from server");
+            }
+            return response.json()
+        })
+        .then(data => {
+            console.log(data);
+            hideSplashScreen();
+        })
+        .catch(error => {
+            console.error(error);
+        });
+};

@@ -1,5 +1,5 @@
 .splash {
-    background-color: aqua;
+    background-color: #d2d3d3;
     width: 100%;
     height: 100%;
     margin: auto;
@@ -10,14 +10,11 @@
 
 #postForm {
     background-color: darkgrey;
-    position: absolute;
+    position: fixed;
     top: 35%;
     left: 33%;
     right: 33%;
     bottom: 35%;
-    text-align: center;
-    z-index: 1;
-    overflow-y: scroll;
 }
 .preventSelect {
     -webkit-user-select: none;
@@ -30,6 +27,9 @@
     top: 33%;
     left: 45%;
     width: 10%;
+}
+.card {
+    width:30%;
 }
 .unLikedIcon {
     color: grey;
@@ -107,4 +107,66 @@ input #file-upload-button {
 }
 .formHide{
     display: none;
+}
+
+++++++++++++++++++++++++++++++++++++++
+/*<style>*/
+ body {
+     font-family: Arial, Helvetica, sans-serif;
+ }
+
+* {
+    box-sizing: border-box;
+}
+
+/* Add padding to containers */
+.reg-container {
+    padding: 16px;
+    background-color: #9fb2a3;
+    width: 20%;
+    margin: auto;
+}
+
+/* Full-width input fields */
+input[type=text], input[type=password] {
+    width: 50%;
+    padding: 15px;
+    margin: 5px 0 22px 0;
+    display: inline-block;
+    border: none;
+    background: #f1f1f1;
+}
+input[type=text]:focus, input[type=password]:focus {
+    background-color: #ddd;
+    outline: none;
+}
+/* Overwrite default styles of hr */
+hr {
+    border: 1px solid #f1f1f1;
+    margin-bottom: 25px;
+}
+/* Set a style for the submit button */
+.registerbtn {
+    background-color: #04AA6D;
+    color: white;
+    padding: 16px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 50%;
+    opacity: 0.9;
+}
+
+.registerbtn:hover {
+    opacity: 1;
+}
+/* Add a blue text color to links */
+a {
+    color: dodgerblue;
+}
+/* Set a grey background color and center the text of the "sign in" section */
+.signin {
+    background-color: #f1f1f1;
+    text-align: center;
+    max-width: 20%;
 }

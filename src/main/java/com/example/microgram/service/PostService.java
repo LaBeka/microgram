@@ -2,9 +2,9 @@ package com.example.microgram.service;
 
 import com.example.microgram.dao.PostDao;
 import com.example.microgram.dao.UserDao;
-import com.example.microgram.dto.PostDto;
-import com.example.microgram.dto.PostDtoShow;
-import com.example.microgram.dto.PostFrontDto;
+import com.example.microgram.dto.post.PostDto;
+import com.example.microgram.dto.post.PostDtoShow;
+import com.example.microgram.dto.post.PostFrontDto;
 import com.example.microgram.dto.ResultDto;
 import com.example.microgram.entity.Post;
 import com.example.microgram.entity.User;

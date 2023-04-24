@@ -1,14 +1,11 @@
-package com.example.microgram.dto;
+package com.example.microgram.dto.post;
 
-import com.example.microgram.dao.UserDao;
 import com.example.microgram.entity.Post;
 import com.example.microgram.entity.User;
 import lombok.Builder;
 import lombok.Data;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Builder
 @Data

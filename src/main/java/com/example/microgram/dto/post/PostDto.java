@@ -1,4 +1,4 @@
-package com.example.microgram.dto;
+package com.example.microgram.dto.post;
 
 import com.example.microgram.entity.Post;
 import lombok.AllArgsConstructor;

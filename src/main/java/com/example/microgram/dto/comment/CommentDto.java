@@ -1,4 +1,4 @@
-package com.example.microgram.dto;
+package com.example.microgram.dto.comment;
 
 import com.example.microgram.entity.Comment;
 import com.example.microgram.entity.Post;

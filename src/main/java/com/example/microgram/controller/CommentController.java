@@ -1,25 +1,20 @@
 package com.example.microgram.controller;
 
 import com.example.microgram.dto.*;
-import com.example.microgram.entity.Comment;
+import com.example.microgram.dto.comment.CommentDto;
+import com.example.microgram.dto.comment.CommentFrontDto;
 import com.example.microgram.entity.Post;
 import com.example.microgram.entity.User;
 import com.example.microgram.service.CommentService;
 import com.example.microgram.service.PostService;
 import com.example.microgram.service.UserService;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 

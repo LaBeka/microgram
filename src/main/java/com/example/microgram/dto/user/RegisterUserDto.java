@@ -1,14 +1,13 @@
-package com.example.microgram.dto;
+package com.example.microgram.dto.user;
 
 import lombok.*;
 
 @Data
 @Builder
-@NoArgsConstructor(access = AccessLevel.PUBLIC, force = true)
+@RequiredArgsConstructor
 @AllArgsConstructor
 public class RegisterUserDto {
     private Long userId;
-    @NonNull
     private String accountName;
     @NonNull
     private String email;
@@ -20,9 +19,6 @@ public class RegisterUserDto {
 
     public String validateUserData(){
         StringBuilder messageBack = new StringBuilder();
-        if(accountName == null || accountName.isBlank() || accountName.length() < 2){
-            messageBack.append("Account name is not valid. ");
-        }
         if(email == null || email.isBlank() || email.length() < 5){
             messageBack.append("Email is not valid. ");
         }
