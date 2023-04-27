@@ -1,20 +1,91 @@
 .splash {
-    background-color: #d2d3d3;
+    background: linear-gradient(#141e30, #243b55);
+    font-family: sans-serif;
     width: 100%;
     height: 100%;
-    margin: auto;
     position: fixed;
     z-index: 2;
-    overflow-y: scroll;
+}
+#regForm, #logForm{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 400px;
+    padding: 40px;
+    transform: translate(-50%, -50%);
+    background: rgba(0,0,0,.5);
+    box-sizing: border-box;
+    box-shadow: 0 15px 25px rgba(0,0,0,.6);
+    border-radius: 10px;
+}
+#regForm h1, p, #logForm h1, p{
+    margin: 0 0 30px;
+    padding: 0;
+    color: #fff;
+    text-align: center;
+}
+#regForm .reg-container, #logForm .log-container {
+    position: relative;
 }
 
+input[type=text], input[type=password] {
+    width: 100%;
+    padding: 10px 0;
+    font-size: 16px;
+    color: #fff;
+    margin-bottom: 30px;
+    border: none;
+    border-bottom: 1px solid #fff;
+    outline: none;
+    background: transparent;
+}
+#regForm .reg-container input:focus ~ label,
+#regForm .reg-container input:valid ~ label,
+#logForm .log-container input:focus ~ label,
+#logForm .log-container input:valid ~ label{
+    top: -20px;
+    left: 0;
+    color: #03e9f4;
+    font-size: 12px;
+}
+#regForm .reg-container label,
+#logForm .log-container label{
+    position: absolute;
+    top:0;
+    left: 0;
+    padding: 10px 0;
+    font-size: 16px;
+    color: #fff;
+    pointer-events: none;
+    transition: .5s;
+}
+.registerbtn, .loginbtn {
+    border-radius: 12px;
+    background-color: #31423b;
+    color: white;
+    padding: 16px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 50%;
+    opacity: 0.9;
+}
+.registerbtn:hover, .loginbtn:hover {
+    opacity: 1;
+}
+a {
+    color: dodgerblue;
+}
+/*=========================================================================*/
 #postForm {
-    background-color: darkgrey;
+    border-radius: 34px;
+    background-color: #31423b;
     position: fixed;
-    top: 35%;
-    left: 33%;
-    right: 33%;
+    right: 40%;
+    left: 40%;
     bottom: 35%;
+    padding: 23px;
+    min-width: 250px;
 }
 .preventSelect {
     -webkit-user-select: none;
@@ -27,9 +98,13 @@
     top: 33%;
     left: 45%;
     width: 10%;
+    z-index: 10;
 }
 .card {
-    width:30%;
+    width: 100%;
+}
+.card p, span{
+    color: black;
 }
 .unLikedIcon {
     color: grey;
@@ -44,7 +119,7 @@
 .fa-icon-comment {
     font-size: 29px;
     margin-left: 10px;
-    margin-top: -0.3%;
+    padding-top: 3px;
 }
 
 .unMarked {
@@ -60,7 +135,7 @@
 }
 
 .card-image {
-    max-width: 100%;
+    max-width: 80%;
     height: auto
 }
 
@@ -90,6 +165,9 @@ input #file-upload-button {
     background-color: red;
 }
 
+.comment-texts{
+    font-family: "Lucida Handwriting";
+}
 .comment-group{
     margin: 5% 5% 5% 5%;
     background-color: aqua;
@@ -100,6 +178,7 @@ input #file-upload-button {
     z-index: 1;
     overflow-y: scroll;
 }
+
 .formShow {
     border: 1px solid red;
     margin: 5% 5% 5% 5%;
@@ -108,65 +187,9 @@ input #file-upload-button {
 .formHide{
     display: none;
 }
-
+.a.nav-link{
+    border: 0.5px solid black;
+    border-radius: 23px;
+    background-color: #959f99;
+}
 ++++++++++++++++++++++++++++++++++++++
-/*<style>*/
- body {
-     font-family: Arial, Helvetica, sans-serif;
- }
-
-* {
-    box-sizing: border-box;
-}
-
-/* Add padding to containers */
-.reg-container {
-    padding: 16px;
-    background-color: #9fb2a3;
-    width: 20%;
-    margin: auto;
-}
-
-/* Full-width input fields */
-input[type=text], input[type=password] {
-    width: 50%;
-    padding: 15px;
-    margin: 5px 0 22px 0;
-    display: inline-block;
-    border: none;
-    background: #f1f1f1;
-}
-input[type=text]:focus, input[type=password]:focus {
-    background-color: #ddd;
-    outline: none;
-}
-/* Overwrite default styles of hr */
-hr {
-    border: 1px solid #f1f1f1;
-    margin-bottom: 25px;
-}
-/* Set a style for the submit button */
-.registerbtn {
-    background-color: #04AA6D;
-    color: white;
-    padding: 16px 20px;
-    margin: 8px 0;
-    border: none;
-    cursor: pointer;
-    width: 50%;
-    opacity: 0.9;
-}
-
-.registerbtn:hover {
-    opacity: 1;
-}
-/* Add a blue text color to links */
-a {
-    color: dodgerblue;
-}
-/* Set a grey background color and center the text of the "sign in" section */
-.signin {
-    background-color: #f1f1f1;
-    text-align: center;
-    max-width: 20%;
-}

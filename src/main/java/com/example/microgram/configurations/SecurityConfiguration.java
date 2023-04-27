@@ -42,6 +42,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET,"/user/**")
                 .fullyAuthenticated()
 
+//                .antMatchers(HttpMethod.POST,"/user/**")
+//                .fullyAuthenticated()
 //                .antMatchers(HttpMethod.POST,"/comment/**")
 //                .fullyAuthenticated()
 

@@ -1,6 +1,4 @@
 let elementPostGroup = document.getElementById('post-card-group');
-const container = document.querySelector('.container');
-
 function hideSplashScreen() {
     const element = document.getElementById("splash");
     element.setAttribute("style", "display: none");
@@ -16,72 +14,61 @@ function hidePostForm(){
     postForm.setAttribute("style", "display: none;")
 }
 function createCommentElement(comment) {
-    let elementCommentGroup = document.getElementById(`commentForm-${comment.postId}`);
+    let elementCommentGroup = document.getElementById(`commentsGroup-${comment.postId}`);
     if (elementCommentGroup == null) {
         elementCommentGroup = document.createElement('div');
-        elementCommentGroup.classList.add(`commentForm-${comment.postId}`);
-        elementCommentGroup.id = `commentForm-${comment.postId}`;
+        elementCommentGroup.classList.add(`commentsGroup-${comment.postId}`);
+        elementCommentGroup.id = `commentsGroup-${comment.postId}`;
     }
 
     let element = document.createElement('div');
-    element.classList.add(`comment`);
     element.id = `comment-${comment.commentId}`;
 
-    element.insertAdjacentHTML(
-        'afterBegin',
-        `<div class="col-md-3 comment-user"> ${comment.userId} </div>`
-    );
-    element.insertAdjacentHTML(
-        'beforeEnd',
-        `<span> ${comment.commentText}</span>`
-    );
-    element.insertAdjacentHTML(
-        'beforeEnd',
-        `<span class="comment-time"> ${comment.commentDate}</span>`
-    );
-    const getLastElPost = document.getElementById(`card-${comment.postId}`);
+    element.innerHTML =
+        `<span class="comment-details" style="font-size: 12px">Written by:${comment.userId}, Time: ${comment.commentDate}</span>
+         <p class="comment-texts">Text: ${comment.commentText}</p>`;
+    elementCommentGroup.appendChild(element);
+    const getLastElPost = document.getElementById(`main-card-${comment.postId}`);
 
     if(getLastElPost == null){
         alert("Post not created yet! First create a post!")
     }
-    elementCommentGroup.appendChild(element);
-    getLastElPost.insertAdjacentHTML(
-        'beforeEnd',
-        `<span> ${comment.commentText}</span>`
-    );
+    getLastElPost.append(elementCommentGroup);
+    elementCommentGroup.setAttribute("style", "padding: 15px;")
 }
-
 function createPostElement(post) {
     if (elementPostGroup == null) {
         elementPostGroup = document.createElement('div');
-        elementPostGroup.classList.add('post-card-group');
+        elementPostGroup.classList.add('row row-cols-1 row-cols-sm-1 row-cols-md-2 g-4 mb-5 pb-5');
         elementPostGroup.id = 'post-card-group';
     }
     let card  = document.createElement("div");
-    card.classList.add('card');
-    card.id = `card-${post.postId}`;
+    card.classList.add('col');
+    card.id = `col-card-${post.postId}`;
     card.innerHTML =
-        `<img className="card-img-top card-image" src=${post.photo} alt="Post photo" ondblclick="setTimeout(onClickLikePost(${post.postId}), 2000)">
-            <div className="card-body card-body-icons" id="card-body">
-                <i className="fa fa-heart unLikedIcon" onClick="onClickLike(${post.postId})" id="icon-heart-${post.postId}"></i>
-                <i className="fa fa-comment-o fa-icon-comment" onClick="showCommentForm(${post.postId})" id="icon-comment-${post.postId}"></i>
-                <i className="fa fa-bookmark unMarked" onClick="onClickBookmark(${post.postId})" id="icon-bookmark-${post.postId}"></i>
+        `<div class="card main-card" id="main-card-${post.postId}">
+            <img class="card-img-top rounded-0" src=${post.photo} id="image-${post.postId}" alt="Post photo" ondblclick="setTimeout(onClickLikePost(${post.postId}), 2000)">
+            <div class="card-body" id="card-body-${post.postId}" style="max-width: 100%">
+                <i class="fa fa-heart unLikedIcon" onClick="onClickLike(${post.postId})" id="icon-heart-${post.postId}"></i>
+                <i class="fa fa-comment-o fa-icon-comment" onClick="showCommentForm(${post.postId})" id="icon-comment-${post.postId}" style="margin-left: 10px; margin-top:5px; padding-top: 3px;"></i>
+                <i class="fa fa-bookmark unMarked" style="left: 80%; position: absolute; padding-top: 5px"" onClick="onClickBookmark(${post.postId})" id="icon-bookmark-${post.postId}"></i>
             </div>
         
-            <p className="post-text">${post.description}</p>
-            <p className="post-date-time">${post.postDateTime}</p>
-            <span className="post-user-${post.postId}"> <p>${post.userName}</p> </span>
+            <p class="post-text">Description of post: ${post.description}</p>
+            <p class="post-date-time">PostDate: ${post.postDateTime}</p>
+            <p class="post-user-${post.postId}" id="post-user-${post.postId}">User email: ${post.userName}</p>
         
             <form id="commentForm-${post.postId}" style="display: none">
-                <p>Comment of the post  №${post.postId}</p>
+                <p class="comment-group-texts">Comment of the post  №${post.postId}</p>
                 <input type="text" id="comment-text-${post.postId}" name="commentText" placeholder="text">
                 <input type="hidden" id="comment-user-${post.postId}" name="userId">
                 <input type="hidden" id="comment-post-${post.postId}" name="postId">
                 <button onClick="addComment(${post.postId})">Submit</button>
-        </form>`;
+            </form>
+        </div>`;
+    card.setAttribute("style", "border: 0px solid; padding: 10px; box-shadow: 0 15px 25px rgba(0,0,0,.6); gx-5")
     elementPostGroup.appendChild(card);
 }
-
 function addPost(post) {
     createPostElement(post);
     hidePostForm();
@@ -96,6 +83,17 @@ function onClickLike(id) {
         getlikeIcon.classList.replace('likedIcon', 'unLikedIcon');
     }
 }
+function showHeartOnPost(id) {
+    let postImg = document.getElementById(`main-card-${id}`);
+    let newElement = document.createElement('div');
+    newElement.classList.add('like-on-post');
+    newElement.id = 'like-on-post';
+    newElement.insertAdjacentHTML(
+        'afterBegin',
+        `<img id="imgID" src="/static/images/heart-ic.png" alt="Icon On Post">`
+    );
+    postImg.prepend(newElement);
+}
 function onClickLikePost(id) {
     let getlikeIcon = document.getElementById(`icon-heart-${id}`);//getlikeIcon = postObjectUnique.document.getElementById(`icon-heart-${id}`);
     const likeStatus = getlikeIcon.classList.contains('unLikedIcon');
@@ -108,22 +106,10 @@ function onClickLikePost(id) {
         getlikeIcon.classList.replace('likedIcon', 'unLikedIcon');
     }
 }
-function showHeartOnPost(id) {
-    var postImg = document.getElementById(`card-${id}`);
-    let newElement = document.createElement('div');
-    newElement.classList.add('like-on-post');
-    newElement.id = 'like-on-post';
-    newElement.insertAdjacentHTML(
-        'afterBegin',
-        `<img id="imgID" src="/static/images/heart-ic.png" alt="Icon On Post">`
-    );
-    postImg.prepend(newElement);
-}
 function removeElement() {
     const removeIMG = document.getElementById('like-on-post');
     removeIMG.remove();
 }
-
 function onClickBookmark(id) {
     let getBookmarkIcon = document.getElementById(`icon-bookmark-${id}`);
     const markStatus = getBookmarkIcon.classList.contains('unMarked');
@@ -189,6 +175,7 @@ function showCommentForm(id){
         "    margin: 5% 5% 5% 5%;");
 }
 function addComment(id) {
+    // this function called in the formComment which is hidden initially
     const commentForm = document.getElementById(`commentForm-${id}`);
     const fileInputCommentText = document.getElementById(  `comment-text-${id}`);
     commentForm.onsubmit = async (e) => {
@@ -243,9 +230,87 @@ registerForm.onsubmit = async (e) => {
         })
         .then(data => {
             console.log(data);
-            hideSplashScreen();
+            changeFormDisplays();
         })
         .catch(error => {
             console.error(error);
         });
+
 };
+function changeFormDisplays(){
+    const logform = document.getElementById("logForm");
+    logform.setAttribute("style", "");
+    registerForm.setAttribute("style", "display: none");
+    // alert("Thank you for registration, login again!");
+}
+// const logFormData = document.getElementById("logForm");
+// logFormData.addEventListener('submit', ()=> {
+//     const data = new FormData(logFormData);
+//     const username = data.get('email');
+//     const password = data.get('password');
+//     const basicAuth = 'Basic ' + btoa(username + ':' + password);
+//     axios.get('http://localhost:8081/user/login', {}, {
+//         method: 'GET',
+//         cache: 'no-cache',
+//         mode: 'no-cors',
+//         headers: {
+//             'Authorization': + basicAuth
+//         }
+//     }).then(function(response) {
+//         console.log('Authenticated');
+//     }).catch(function(error) {
+//         console.log('Error on Authentication');
+//     });
+// })
+
+function findLocalStorageUser() {
+    let userJson = localStorage.getItem('email');
+    // alert("Found user in localstorage: " + userJson);
+    if (userJson != null) {
+        hideSplashScreen();
+        let user = JSON.parse(userJson);
+        console.log(user.name);
+        let element = document.getElementById("stored-user");
+        element.innerText = `${user.name}`;
+        element.setAttribute("style", "border: 0.5px solid black; border-radius: 23px; color: black; background-color: #959f99; height: 42px; width: 100px; padding: 5px;")
+    }
+}
+function cleanLocalStorageUser(){
+    localStorage.clear();
+    let userJson = localStorage.getItem('email');
+    console.log(userJson);
+}
+$("form").on('submit', function (e) {
+    e.preventDefault();
+    let data = new FormData(e.target);
+    //let user = JSON.stringify(Object.fromEntries(data));
+    let response = createUser(data);
+    getUserFromLocalStorage();
+    // console.log(response.email)
+})
+function createUser(data){
+    const settings = {
+        method: 'POST',
+        cache: 'no-cache',
+        mode: 'cors',
+        headers:
+            {
+                'Content-Type': 'application/json'
+            },
+        body: JSON.stringify(Object.fromEntries(data))
+    }
+    const baseUrl = 'http://localhost:8081';
+    fetch(baseUrl + '/user/login', settings)
+        .then(response => response.json())
+        .then(json => {
+            console.log(JSON.stringify(json))
+            localStorage.setItem('email', JSON.stringify(json));
+            hideSplashScreen();
+            findLocalStorageUser();
+        })
+}
+function getUserFromLocalStorage(){
+    let userJson = localStorage.getItem('email');
+    let user = JSON.parse(userJson);
+    console.log(user)
+}
