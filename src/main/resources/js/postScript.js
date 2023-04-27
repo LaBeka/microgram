@@ -216,6 +216,14 @@ function addComment(id) {
     commentForm.setAttribute("style", "display: none");
 }
 
+function changeFormDisplays(){
+    const registerForm = document.getElementById("regForm");
+
+    registerForm.setAttribute("style", "display: none");
+    const logform = document.getElementById("logForm");
+
+    logform.setAttribute("style", "");
+}
 document.getElementById("regForm").onsubmit = async (e) =>{
     e.preventDefault();
     const form = e.target;
@@ -239,12 +247,10 @@ document.getElementById("regForm").onsubmit = async (e) =>{
         .then(data => {
             console.log(data);
             localStorage.setItem('email', JSON.stringify(data));
+            findLocalStorageUser();
             let rF = document.getElementById("regForm");
             rF.reset();
             hideSplashScreen();
-        })
-        .catch(error => {
-            console.error(error);
         });
 };
 
@@ -278,29 +284,22 @@ function createUser(data){
 }
 function getUserFromLocalStorage(){
     let userJson = localStorage.getItem('email');
-    let user = JSON.parse(userJson);
-    console.log(user)
+    return  JSON.parse(userJson);
 }
-    function changeFormDisplays(){
-        const logform = document.getElementById("logForm");
-        logform.reset();
-        logform.setAttribute("style", "");
-        registerForm.setAttribute("style", "display: none");
+function findLocalStorageUser() {
+    let userJson = getUserFromLocalStorage();
+    if (userJson != null) {
+        hideSplashScreen();
+        // let user = JSON.parse(userJson);
+        console.log(userJson.name);
+        let element = document.getElementById("stored-user");
+        element.innerText = `${userJson.name}`;
+        element.setAttribute("style", "border: 0.5px solid black; border-radius: 23px; color: black; background-color: #959f99; height: 42px; width: 100px; padding: 5px;")
     }
-    function findLocalStorageUser() {
-        let userJson = getUserFromLocalStorage();
-        if (userJson != null) {
-            hideSplashScreen();
-            let user = JSON.parse(userJson);
-            console.log(user.name);
-            let element = document.getElementById("stored-user");
-            element.innerText = `${user.name}`;
-            element.setAttribute("style", "border: 0.5px solid black; border-radius: 23px; color: black; background-color: #959f99; height: 42px; width: 100px; padding: 5px;")
-        }
-    }
-    function cleanLocalStorageUser() {
-        localStorage.clear();
-        let userJson = localStorage.getItem('email');
-        console.log(userJson);
-        showSplashScreen();
-    }
+}
+function cleanLocalStorageUser() {
+    localStorage.clear();
+    let userJson = localStorage.getItem('email');
+    console.log(userJson);
+    showSplashScreen();
+}
