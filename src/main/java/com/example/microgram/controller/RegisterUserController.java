@@ -19,12 +19,12 @@ import java.util.Optional;
 public class RegisterUserController {
     private RegistrationService service;
 
-    @PostMapping(value="/reg")
+    @PostMapping(value="/register")
     @CrossOrigin(origins = "http://localhost:63342")
-    public ResponseEntity register(@RequestParam("email") String email,
+    public ResponseEntity reg(@RequestParam("email") String email,
                                    @RequestParam("password") String password,
                                    @RequestParam("name") String name) {
-        RegisterUserDto regUser = new RegisterUserDto(email, password, name);
+        RegisterUserDto regUser = new RegisterUserDto();
         String validateErrors = regUser.validateUserData();
         if (!validateErrors.isEmpty()) {
             return new ResponseEntity(validateErrors, HttpStatus.OK);
@@ -36,6 +36,29 @@ public class RegisterUserController {
         Optional<RegUserFrontDto> createdUser = service.registerNewUser(regUser);
         if(createdUser.isEmpty()){
             return new ResponseEntity("For some reason user is not created", HttpStatus.OK);
+        }
+        return new ResponseEntity(createdUser.get(), HttpStatus.OK);
+    }
+    @PostMapping(value="/reg")
+    @CrossOrigin(origins = "http://localhost:63342")
+    public ResponseEntity register(@RequestBody RegisterUserDto regUser) {
+        String validateErrors = regUser.validateUserData();
+        if (!validateErrors.isEmpty()) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .build();
+        }
+        Optional<RegUserFrontDto> userExists = service.checkIfUserExists(regUser);
+        if (userExists.isPresent()) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .build();
+        }
+        Optional<RegUserFrontDto> createdUser = service.registerNewUser(regUser);
+        if(createdUser.isEmpty()){
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .build();
         }
         return new ResponseEntity(createdUser.get(), HttpStatus.OK);
     }

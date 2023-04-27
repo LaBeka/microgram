@@ -3,6 +3,10 @@ function hideSplashScreen() {
     const element = document.getElementById("splash");
     element.setAttribute("style", "display: none");
 }
+function showSplashScreen() {
+    const element = document.getElementById("splash");
+    element.setAttribute("style", " background: linear-gradient(#141e30, #243b55); font-family: sans-serif; width: 100%; height: 100%; position: fixed; z-index: 2;")
+}
 function showPostForm(){
     const postFormDiv = document.getElementById('postFormDiv');
     const postForm = document.getElementById('postForm');
@@ -212,15 +216,19 @@ function addComment(id) {
     commentForm.setAttribute("style", "display: none");
 }
 
-const registerForm = document.getElementById("regForm");
-registerForm.onsubmit = async (e) => {
+document.getElementById("regForm").onsubmit = async (e) =>{
     e.preventDefault();
     const form = e.target;
     const data = new FormData(form);
-    // const userJSON = JSON.stringify(Object.fromEntries(data));
     fetch('http://localhost:8081/register/reg', {
         method: 'POST',
-        body: data
+        cache: 'no-cache',
+        mode: 'cors',
+        headers:
+            {
+                'Content-Type': 'application/json'
+            },
+        body:  JSON.stringify(Object.fromEntries(data))
     })
         .then(response => {
             if (response.status >= 400) {
@@ -230,64 +238,21 @@ registerForm.onsubmit = async (e) => {
         })
         .then(data => {
             console.log(data);
-            changeFormDisplays();
+            localStorage.setItem('email', JSON.stringify(data));
+            let rF = document.getElementById("regForm");
+            rF.reset();
+            hideSplashScreen();
         })
         .catch(error => {
             console.error(error);
         });
-
 };
-function changeFormDisplays(){
-    const logform = document.getElementById("logForm");
-    logform.setAttribute("style", "");
-    registerForm.setAttribute("style", "display: none");
-    // alert("Thank you for registration, login again!");
-}
-// const logFormData = document.getElementById("logForm");
-// logFormData.addEventListener('submit', ()=> {
-//     const data = new FormData(logFormData);
-//     const username = data.get('email');
-//     const password = data.get('password');
-//     const basicAuth = 'Basic ' + btoa(username + ':' + password);
-//     axios.get('http://localhost:8081/user/login', {}, {
-//         method: 'GET',
-//         cache: 'no-cache',
-//         mode: 'no-cors',
-//         headers: {
-//             'Authorization': + basicAuth
-//         }
-//     }).then(function(response) {
-//         console.log('Authenticated');
-//     }).catch(function(error) {
-//         console.log('Error on Authentication');
-//     });
-// })
 
-function findLocalStorageUser() {
-    let userJson = localStorage.getItem('email');
-    // alert("Found user in localstorage: " + userJson);
-    if (userJson != null) {
-        hideSplashScreen();
-        let user = JSON.parse(userJson);
-        console.log(user.name);
-        let element = document.getElementById("stored-user");
-        element.innerText = `${user.name}`;
-        element.setAttribute("style", "border: 0.5px solid black; border-radius: 23px; color: black; background-color: #959f99; height: 42px; width: 100px; padding: 5px;")
-    }
-}
-function cleanLocalStorageUser(){
-    localStorage.clear();
-    let userJson = localStorage.getItem('email');
-    console.log(userJson);
-}
-$("form").on('submit', function (e) {
+document.getElementById("logForm").onsubmit = (e) =>{
     e.preventDefault();
     let data = new FormData(e.target);
-    //let user = JSON.stringify(Object.fromEntries(data));
-    let response = createUser(data);
-    getUserFromLocalStorage();
-    // console.log(response.email)
-})
+    createUser(data);
+}
 function createUser(data){
     const settings = {
         method: 'POST',
@@ -305,6 +270,8 @@ function createUser(data){
         .then(json => {
             console.log(JSON.stringify(json))
             localStorage.setItem('email', JSON.stringify(json));
+            let lF = document.getElementById("logForm");
+            lF.reset();
             hideSplashScreen();
             findLocalStorageUser();
         })
@@ -314,3 +281,26 @@ function getUserFromLocalStorage(){
     let user = JSON.parse(userJson);
     console.log(user)
 }
+    function changeFormDisplays(){
+        const logform = document.getElementById("logForm");
+        logform.reset();
+        logform.setAttribute("style", "");
+        registerForm.setAttribute("style", "display: none");
+    }
+    function findLocalStorageUser() {
+        let userJson = getUserFromLocalStorage();
+        if (userJson != null) {
+            hideSplashScreen();
+            let user = JSON.parse(userJson);
+            console.log(user.name);
+            let element = document.getElementById("stored-user");
+            element.innerText = `${user.name}`;
+            element.setAttribute("style", "border: 0.5px solid black; border-radius: 23px; color: black; background-color: #959f99; height: 42px; width: 100px; padding: 5px;")
+        }
+    }
+    function cleanLocalStorageUser() {
+        localStorage.clear();
+        let userJson = localStorage.getItem('email');
+        console.log(userJson);
+        showSplashScreen();
+    }

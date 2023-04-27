@@ -36,10 +36,10 @@ public class RegisterUserDao {
                 ");");
     }
 
-    public Optional<RegUserFrontDto> ifIdenticalUserExists(RegisterUserDto userDto){
-        String sql = "select * from users where email = ? and account_name = ? and password = ?;";
+    public Optional<RegUserFrontDto> ifIdenticalUserExists(String email){
+        String sql = "select * from users where email = ?;";
         return Optional.ofNullable(DataAccessUtils.singleResult(
-                jdbcTemplate.query(sql, regUserMapper, userDto.getEmail(), userDto.getAccountName(), userDto.getPassword())
+                jdbcTemplate.query(sql, regUserMapper, email)
         ));
     }
 

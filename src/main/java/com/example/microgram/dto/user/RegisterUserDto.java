@@ -9,11 +9,11 @@ import lombok.*;
 public class RegisterUserDto {
     private Long userId;
     private String accountName;
-    @NonNull
+//    @NonNull
     private String email;
-    @NonNull
+//    @NonNull
     private String password;
-    @NonNull
+//    @NonNull
     private String name;
     private boolean enabled;
 

@@ -27,12 +27,6 @@ public class RegistrationService  {
     }
 
     public Optional<RegUserFrontDto> checkIfUserExists(RegisterUserDto regUser) {
-        var newUser = RegisterUserDto.builder()
-                .accountName("Nick name: " + regUser.getName())
-                .email(regUser.getEmail())
-                .password(passwordEncoder.encode(regUser.getPassword()))
-                .name(regUser.getName())
-                .build();
-        return regUserDao.ifIdenticalUserExists(newUser);
+        return regUserDao.ifIdenticalUserExists(regUser.getEmail());
     }
 }
