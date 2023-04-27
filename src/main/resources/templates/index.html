@@ -16,6 +16,11 @@
 </head>
 
 <body>
+<script>
+  $(()=>{
+    findLocalStorageUser();
+  })
+</script>
 <div>
   <div class="splash" id="splash">
     <form id="regForm">
@@ -34,9 +39,24 @@
         </div>
         <p>By creating an account you agree to our <a href="#">Terms & Privacy</a>.</p>
         <div>
-          <p>Already have an account? <a onclick="hideSplashScreen()" style="color: dodgerblue; cursor: pointer">Sign in</a>.</p>
+          <p>Already have an account? <a onclick="changeFormDisplays()" style="color: dodgerblue; cursor: pointer">Sign in</a>.</p>
         </div>
         <button type="submit" class="registerbtn">Register</button>
+      </div>
+    </form>
+
+    <form id="logForm" style="display: none">
+      <div class="log-container">
+        <div>
+          <h1>LOGIN</h1>
+        </div>
+        <div>
+          <input type="text" placeholder="Enter Email" name="email" required>
+        </div>
+        <div>
+          <input type="password" placeholder="Enter Password" name="password" required>
+        </div>
+        <button type="submit" class="loginbtn">LOGIN</button>
       </div>
     </form>
   </div>
@@ -59,33 +79,53 @@
   </div>
 
   <div class="container">
-    <button onclick="showPostForm()">Show create post form</button>
-    <button onclick="hidePostForm()">Hide create post form</button>
-    <button onclick="getAllPosts()">Show all posts</button>
-
-    <div class="post-card-group" id="post-card-group">
-      <div class="card" id="card" style="display: none">
-        <img class="card-img-top card-image" src="/data/images/1/trees.jpg" alt="Post photo" ondblclick="setTimeout(onClickLikePost(e), 2000)">
-        <div class="card-body" id="card-body">
-          <i class="fa fa-heart unLikedIcon" onclick="onClickLike()" id="icon-heart"></i>
-          <i class="fa fa-comment-o fa-icon-comment" onclick="showCommentForm(e)" id="icon-comment"></i>
-          <i class="fa fa-bookmark unMarked" onclick="onClickBookmark(e)" id="icon-bookmark"></i>
+    <header>
+      <nav class="navbar navbar-expand-lg navbar-light">
+        <div  id="navbarNavDropdown">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <button class="nav-link" style="border: 0.5px solid black; border-radius: 23px; background-color: #959f99;" onclick="showPostForm()">Show create post form<span class="sr-only">(current)</span></button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-link" style="border: 0.5px solid black; border-radius: 23px; background-color: #959f99;" onclick="hidePostForm()">Hide create post form</button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-link" style="border: 0.5px solid black; border-radius: 23px; background-color: #959f99;" onclick="getAllPosts()">Show all posts</button>
+            </li>
+            <li class="nav-item">
+              <p id="stored-user"></p>
+            </li>
+            <li class="nav-item">
+              <button class="nav-link" style="border: 0.5px solid black; border-radius: 23px; background-color: #959f99;" onclick="cleanLocalStorageUser()">Log out</button>
+            </li>
+          </ul>
         </div>
-        <p class="post-text"> dsd </p>
-        <p class="post-date-time"> Thu Apr 20 2023 </p>
-        <span class="post-user"><p> beka@gmail.com || Beka</p></span>
+      </nav>
+    </header>
+    <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 g-4 mb-5 pb-5" id="post-card-group">
+      <div class="col" id="col-card" style="display: none">
+        <div class="card main-card" style="border: 1px solid; padding: 10px; box-shadow: 0 15px 25px rgba(0,0,0,.6);;"><!--//new added-->
+          <img class="card-img-top rounded-0" src="trees.jpg" alt="Post photo" ondblclick="setTimeout(onClickLikePost(e), 2000)">
+          <div class="card-body" id="card-body" style="max-width: 100%">
+            <i class="fa fa-heart unLikedIcon" onclick="onClickLike()" id="icon-heart"></i>
+            <i class="fa fa-comment-o fa-icon-comment" style="margin-left: 10px; margin-top:5px; padding-top: 3px;" onclick="showCommentForm(e)" id="icon-comment"></i>
+            <i class="fa fa-bookmark unMarked" style="left: 80%; position: absolute; padding-top: 5px"  onclick="onClickBookmark(e)" id="icon-bookmark"></i>
+          </div>
+          <p class="post-text">Post-description: dsd </p>
+          <p class="post-date-time">PostDate: Thu Apr 20 2023 </p>
+          <span class="post-user"><p>User email: beka@gmail.com || Beka</p></span>
 
-        <div id="comment-group">
-          <form id="commentForm">
-            <p>Comment area</p>
-              <input type="text" id="comment-text" name="user-id" value="comment-text">
-              <input type="hidden" id="comment-user-id" name="user-id" value="1"/>
-              <input type="hidden" id="comment-post-id" name="post-id" value="1"/>
-              <button type="submit">Submit</button>
-          </form>
+          <div id="comment-group">
+            <form id="commentForm">
+              <p class="comment-group-texts">Comment area</p>
+                <input type="text" id="comment-text" name="user-id" value="comment-text">
+                <input type="hidden" id="comment-user-id" name="user-id" value="1"/>
+                <input type="hidden" id="comment-post-id" name="post-id" value="1"/>
+                <button type="submit">Submit</button>
+            </form>
+          </div>
         </div>
     </div>
-
   </div>
 
 </div>

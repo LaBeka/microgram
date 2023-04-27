@@ -2,10 +2,12 @@ package com.example.microgram.controller;
 
 import com.example.microgram.dto.user.RegUserFrontDto;
 import com.example.microgram.dto.user.RegisterUserDto;
+import com.example.microgram.entity.User;
 import com.example.microgram.service.RegistrationService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -37,10 +39,4 @@ public class RegisterUserController {
         }
         return new ResponseEntity(createdUser.get(), HttpStatus.OK);
     }
-    @GetMapping(value = "/auth")
-    public ResponseEntity auth(@RequestBody RegisterUserDto user){
-        System.out.println(user);
-        return ResponseEntity.ok().build();
-    }
-
 }
