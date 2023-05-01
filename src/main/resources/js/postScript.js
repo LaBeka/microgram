@@ -70,7 +70,7 @@ function createPostElement(post) {
                 <button onClick="addComment(${post.postId})">Submit</button>
             </form>
         </div>`;
-    card.setAttribute("style", "border: 0px solid; padding: 10px; box-shadow: 0 15px 25px rgba(0,0,0,.6); gx-5")
+    card.setAttribute("style", "margin: 10px; border: 0px solid; padding: 10px; box-shadow: 0 15px 25px rgba(0,0,0,.6); gx-5")
     elementPostGroup.appendChild(card);
 }
 function addPost(post) {

@@ -7,7 +7,10 @@ import com.example.microgram.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -22,6 +25,14 @@ public class UserController {
     @CrossOrigin(origins = "http://localhost:63342")
     @PostMapping(value = "/login")
     public ResponseEntity login(@RequestBody User user){
+        Authentication auth = new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword());
+        try{
+            authenticationManager.authenticate(auth);
+            SecurityContextHolder.getContext().setAuthentication(auth);
+            return ResponseEntity.ok("ok");
+        } catch (AuthenticationException ex){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("неправильный логин");
+        }
         User userFound = service.loadUserByUsername(user.getEmail());
         System.out.println(userFound);
         return new ResponseEntity(userFound, HttpStatus.OK);

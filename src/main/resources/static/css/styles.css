@@ -77,6 +77,13 @@ a {
     color: dodgerblue;
 }
 /*=========================================================================*/
+@media (min-width: 768px) {
+    .row-cols-md-2 > * {
+        -ms-flex: 0 0 50%;
+        flex: 0 0 50%;
+        max-width: 45%;
+    }
+}
 #postForm {
     border-radius: 34px;
     background-color: #31423b;
